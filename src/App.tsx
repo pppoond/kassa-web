@@ -7,28 +7,48 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="p-10 space-y-8 min-h-screen">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Solid Buttons</h2>
+        <div className="flex flex-wrap gap-4">
+          <button className="btn btn-primary">Primary</button>
+          <button className="btn btn-secondary">Secondary</button>
+          <button className="btn btn-accent">Accent</button>
+          <button className="btn btn-info">Info</button>
+          <button className="btn btn-success">Success</button>
+          <button className="btn btn-warning">Warning</button>
+          <button className="btn btn-error">Error</button>
+          <button className="btn btn-neutral">Neutral</button>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Outline Buttons</h2>
+        <div className="flex flex-wrap gap-4">
+          <button className="btn btn-outline btn-primary">Primary</button>
+          <button className="btn btn-outline btn-secondary">Secondary</button>
+          <button className="btn btn-outline btn-accent">Accent</button>
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Sizes</h2>
+        <div className="flex flex-wrap items-center gap-4">
+          <button className="btn btn-primary btn-lg">Large</button>
+          <button className="btn btn-primary btn-md">Normal</button>
+          <button className="btn btn-primary btn-sm">Small</button>
+          <button className="btn btn-primary btn-xs">Tiny</button>
+        </div>
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">States</h2>
+        <div className="flex flex-wrap items-center gap-4">
+          <button className="btn btn-primary">Normal</button>
+          <button className="btn btn-primary btn-active">Active</button>
+          <button className="btn btn-primary" disabled>Disabled</button>
+        </div>
+      </div>
+    </div>
   )
 }
 
