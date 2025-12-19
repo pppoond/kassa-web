@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import type { Category } from '../../types';
+import Button from '../common/Button';
 
 interface CategoryFormProps {
     initialData?: Category | null;
@@ -62,9 +63,10 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
                             {...register('description')}
                         ></textarea>
                     </div>
+
                     <div className="modal-action">
-                        <button type="button" className="btn" onClick={onClose}>Cancel</button>
-                        <button type="submit" className="btn btn-primary">Save</button>
+                        <Button type="button" onClick={onClose}>Cancel</Button>
+                        <Button type="submit" variant="primary">Save</Button>
                     </div>
                 </form>
             </div>

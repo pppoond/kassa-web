@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import type { MenuItem, Category } from '../../types';
+import type { MenuItem } from '../../types';
+import Button from '../common/Button';
 import { useAdminStore } from '../../store/useAdminStore';
 
 interface MenuItemFormProps {
@@ -135,9 +136,10 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                         ></textarea>
                     </div>
 
+                    {/* Description */}
                     <div className="modal-action">
-                        <button type="button" className="btn" onClick={onClose}>Cancel</button>
-                        <button type="submit" className="btn btn-primary">Save</button>
+                        <Button type="button" onClick={onClose}>Cancel</Button>
+                        <Button type="submit" variant="primary">Save</Button>
                     </div>
                 </form>
             </div>

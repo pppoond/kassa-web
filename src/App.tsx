@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import ThemeToggle from './components/common/ThemeToggle'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <div className="p-10 space-y-8 min-h-screen">
+    <div className="p-10 space-y-8 min-h-screen transition-colors duration-300">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Kassa Web</h1>
+        <ThemeToggle />
+      </div>
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Solid Buttons</h2>
         <div className="flex flex-wrap gap-4">
