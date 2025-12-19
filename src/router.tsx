@@ -4,11 +4,16 @@ import DashboardPage from './pages/admin/DashboardPage';
 import CategoryPage from './pages/admin/CategoryPage';
 import MenuItemPage from './pages/admin/MenuItemPage';
 import App from './App';
+import PosPage from './pages/pos/PosPage';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App />, // Existing simple landing/example
+        element: <App />,
+    },
+    {
+        path: '/pos',
+        element: <PosPage />,
     },
     {
         path: '/admin',
