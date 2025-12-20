@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "flyonui";
+@plugin "tailwindcss-animate";
 @source "../node_modules/flyonui/dist/**/*.js";
 
 @theme {
