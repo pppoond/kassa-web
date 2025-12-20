@@ -95,7 +95,6 @@ const PosPage = () => {
                         )}
                     >
                         <Store className="w-6 h-6" />
-                        <span className="text-[10px] uppercase font-bold mt-1">POS</span>
                     </button>
 
                     <button
@@ -106,7 +105,6 @@ const PosPage = () => {
                         )}
                     >
                         <LayoutGrid className="w-6 h-6" />
-                        <span className="text-[10px] uppercase font-bold mt-1">Tables</span>
                     </button>
 
                     <button className="btn btn-square btn-ghost w-full h-14 rounded-xl">

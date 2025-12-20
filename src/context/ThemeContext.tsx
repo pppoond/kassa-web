@@ -24,11 +24,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         // Update DOM and localStorage when theme changes
         const root = document.documentElement;
+        root.setAttribute('data-theme', theme);
+        
         if (theme === 'dark') {
-            root.setAttribute('data-theme', 'dark');
             root.classList.add('dark');
         } else {
-            root.removeAttribute('data-theme');
             root.classList.remove('dark');
         }
         localStorage.setItem('theme', theme);
