@@ -31,5 +31,14 @@
     "category": "Category",
     "print": "Print",
     "closeDay": "Close Day"
+  },
+  "cart": {
+    "title": "Your Order",
+    "view": "View Cart",
+    "hide": "Hide Cart",
+    "placeOrder": "Place Order",
+    "empty": "Your cart is empty",
+    "orderPlaced": "Order Placed Successfully!",
+    "table": "Table"
   }
 }

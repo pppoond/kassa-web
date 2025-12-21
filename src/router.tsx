@@ -4,12 +4,14 @@ import App from './App';
 
 // Lazy load components
 const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
+const CustomerLayout = React.lazy(() => import('./layouts/CustomerLayout')); // Add this
 const DashboardPage = React.lazy(() => import('./pages/admin/DashboardPage'));
 const CategoryPage = React.lazy(() => import('./pages/admin/CategoryPage'));
 const MenuItemPage = React.lazy(() => import('./pages/admin/MenuItemPage'));
 const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
 const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage'));
+const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage')); // Add this
 
 // Loading component
 const Loading = () => (
@@ -46,6 +48,24 @@ const router = createBrowserRouter([
                 <DayEndPage />
             </Suspense>
         ),
+    },
+    {
+        path: '/customer',
+        element: (
+            <Suspense fallback={<Loading />}>
+                <CustomerLayout />
+            </Suspense>
+        ),
+        children: [
+            {
+                path: 'order/:orderId',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <MobileOrderingPage />
+                    </Suspense>
+                ),
+            },
+        ],
     },
     {
         path: '/admin',
