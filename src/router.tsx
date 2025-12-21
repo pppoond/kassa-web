@@ -6,6 +6,7 @@ import MenuItemPage from './pages/admin/MenuItemPage';
 import App from './App';
 import PosPage from './pages/pos/PosPage';
 import KitchenPage from './pages/kitchen/KitchenPage';
+import DayEndPage from './pages/report/DayEndPage';
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: '/kitchen',
         element: <KitchenPage />,
+    },
+    {
+        path: '/report/day-end',
+        element: <DayEndPage />,
     },
     {
         path: '/admin',

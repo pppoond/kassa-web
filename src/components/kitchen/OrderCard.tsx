@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SubOrderDto } from '../../types/kitchen';
 import { Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface OrderCardProps {
     order: SubOrderDto;
@@ -8,6 +9,7 @@ interface OrderCardProps {
 }
 
 export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange }) => {
+    const { t } = useTranslation();
     // Calculate elapsed time (mock)
     const elapsedMinutes = Math.floor((new Date().getTime() - new Date(order.createdAt).getTime()) / 60000);
 
@@ -24,17 +26,17 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange }) =
         <div className={`card shadow-md border border-base-200 border-l-8 ${getStatusColor(order.status)} bg-base-100 text-base-content`}>
             <div className="card-body p-4">
                 <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold">Table {order.tableName}</h3>
+                    <h3 className="text-xl font-bold">{t('kitchen.table')} {order.tableName}</h3>
                     <div className="flex items-center text-sm font-mono text-base-content/70">
                         <Clock size={16} className="mr-1" />
                         {elapsedMinutes}m
                     </div>
                 </div>
-                <div className="text-xs text-base-content/70 mb-2">Round {order.roundNo} • {order.status}</div>
+                <div className="text-xs text-base-content/70 mb-2">{t('kitchen.round')} {order.roundNo} • {t(`kitchen.${order.status.toLowerCase()}`)}</div>
                 
                 {order.notes && (
                     <div className="alert alert-warning text-xs p-2 mb-2">
-                        <span>Note: {order.notes}</span>
+                        <span>{t('kitchen.note')}: {order.notes}</span>
                     </div>
                 )}
 
@@ -60,7 +62,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange }) =
                             className="btn btn-primary btn-lg w-full text-xl"
                             onClick={() => onStatusChange(order.id, 'Cooking')}
                         >
-                            Start Cooking
+                            {t('kitchen.startCooking')}
                         </button>
                     )}
                     {order.status === 'Cooking' && (
@@ -68,7 +70,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange }) =
                             className="btn btn-success btn-lg w-full text-white text-xl"
                             onClick={() => onStatusChange(order.id, 'Ready')}
                         >
-                            Mark Ready
+                            {t('kitchen.markReady')}
                         </button>
                     )}
                      {order.status === 'Ready' && (
@@ -76,7 +78,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange }) =
                             className="btn btn-outline btn-lg w-full text-xl"
                             onClick={() => onStatusChange(order.id, 'Served')}
                         >
-                            Mark Served
+                            {t('kitchen.markServed')}
                         </button>
                     )}
                 </div>

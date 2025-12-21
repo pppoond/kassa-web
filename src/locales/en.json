@@ -1,0 +1,35 @@
+{
+  "kitchen": {
+    "title": "Kitchen Display System",
+    "table": "Table",
+    "round": "Round",
+    "pending": "Pending",
+    "cooking": "Cooking",
+    "ready": "Ready",
+    "served": "Served",
+    "noActiveOrders": "No active orders",
+    "startCooking": "Start Cooking",
+    "markReady": "Mark Ready",
+    "markServed": "Mark Served",
+    "note": "Note"
+  },
+  "report": {
+    "title": "Day End Report (Z-Report)",
+    "confirmClose": "Are you sure you want to close the day? This action cannot be undone.",
+    "summary": "Summary",
+    "totalSales": "Total Sales",
+    "orders": "orders",
+    "openedAt": "Opened At",
+    "status": "Status",
+    "closed": "Closed",
+    "open": "Open",
+    "paymentMethods": "Payment Methods",
+    "method": "Method",
+    "count": "Count",
+    "amount": "Amount",
+    "categorySales": "Category Sales",
+    "category": "Category",
+    "print": "Print",
+    "closeDay": "Close Day"
+  }
+}
