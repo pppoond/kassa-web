@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Monitor, LayoutDashboard } from 'lucide-react';
+import { Monitor, LayoutDashboard, Utensils } from 'lucide-react';
 import Button from './components/common/Button';
 import ThemeToggle from './components/common/ThemeToggle';
 
@@ -32,6 +32,16 @@ const App = () => {
         >
           <LayoutDashboard className="w-24 h-24" />
           Backoffice
+        </Button>
+
+        {/* Kitchen Button */}
+        <Button
+          className="flex-1 w-full h-64 md:h-96 text-4xl flex flex-col gap-6 hover:scale-105 transition-transform shadow-xl"
+          variant="accent" // Assuming 'accent' or similar variant exists, else might fallback or need checking
+          onClick={() => navigate('/kitchen')}
+        >
+          <Utensils className="w-24 h-24" />
+          Kitchen
         </Button>
       </div>
     </div>

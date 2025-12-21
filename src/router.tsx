@@ -5,6 +5,7 @@ import CategoryPage from './pages/admin/CategoryPage';
 import MenuItemPage from './pages/admin/MenuItemPage';
 import App from './App';
 import PosPage from './pages/pos/PosPage';
+import KitchenPage from './pages/kitchen/KitchenPage';
 
 const router = createBrowserRouter([
     {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     {
         path: '/pos',
         element: <PosPage />,
+    },
+    {
+        path: '/kitchen',
+        element: <KitchenPage />,
     },
     {
         path: '/admin',
