@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.12",
+    "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "flyonui": "^2.4.1",
     "lucide-react": "^0.562.0",
