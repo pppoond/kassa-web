@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Lazy load components
 const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
@@ -10,8 +11,9 @@ const CategoryPage = React.lazy(() => import('./pages/admin/CategoryPage'));
 const MenuItemPage = React.lazy(() => import('./pages/admin/MenuItemPage'));
 const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
-const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage'));
-const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage')); // Add this
+const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage')); // Restore this
+const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage'));
+const LoginPage = React.lazy(() => import('./pages/auth/LoginPage')); // Add this
 
 // Loading component
 const Loading = () => (
@@ -22,34 +24,15 @@ const Loading = () => (
 
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <App />,
-    },
-    {
-        path: '/pos',
+        path: '/login',
         element: (
             <Suspense fallback={<Loading />}>
-                <PosPage />
+                <LoginPage />
             </Suspense>
         ),
     },
     {
-        path: '/kitchen',
-        element: (
-            <Suspense fallback={<Loading />}>
-                <KitchenPage />
-            </Suspense>
-        ),
-    },
-    {
-        path: '/report/day-end',
-        element: (
-            <Suspense fallback={<Loading />}>
-                <DayEndPage />
-            </Suspense>
-        ),
-    },
-    {
+        // Public Customer Routes
         path: '/customer',
         element: (
             <Suspense fallback={<Loading />}>
@@ -68,36 +51,70 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: '/admin',
-        element: (
-            <Suspense fallback={<Loading />}>
-                <AdminLayout />
-            </Suspense>
-        ),
+        // Protected Admin/Staff Routes
+        element: <ProtectedRoute />, // Wrap these routes
         children: [
             {
-                index: true,
+                path: '/',
+                element: <App />,
+            },
+            {
+                path: '/pos',
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <DashboardPage />
+                        <PosPage />
                     </Suspense>
                 ),
             },
             {
-                path: 'categories',
+                path: '/kitchen',
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <CategoryPage />
+                        <KitchenPage />
                     </Suspense>
                 ),
             },
             {
-                path: 'menu-items',
+                path: '/report/day-end',
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <MenuItemPage />
+                        <DayEndPage />
                     </Suspense>
                 ),
+            },
+            {
+                path: '/admin',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <AdminLayout />
+                    </Suspense>
+                ),
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <DashboardPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'categories',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <CategoryPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'menu-items',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <MenuItemPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
         ],
     },
