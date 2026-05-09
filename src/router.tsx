@@ -13,7 +13,8 @@ const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
 const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage')); // Restore this
 const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage'));
-const LoginPage = React.lazy(() => import('./pages/auth/LoginPage')); // Add this
+const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage = React.lazy(() => import('./pages/auth/RegisterPage'));
 
 // Loading component
 const Loading = () => (
@@ -28,6 +29,14 @@ const router = createBrowserRouter([
         element: (
             <Suspense fallback={<Loading />}>
                 <LoginPage />
+            </Suspense>
+        ),
+    },
+    {
+        path: '/register',
+        element: (
+            <Suspense fallback={<Loading />}>
+                <RegisterPage />
             </Suspense>
         ),
     },
