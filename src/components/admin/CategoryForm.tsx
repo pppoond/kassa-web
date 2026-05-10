@@ -108,7 +108,3 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
 };
 
 export default CategoryForm;
-    );
-};
-
-export default CategoryForm;
