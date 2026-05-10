@@ -6,7 +6,7 @@ export const getSystemStatus = async (): Promise<SystemStatus> => {
     return response.data.data;
 };
 
-export const setupSystem = async (data: SetupData): Promise<any> => {
-    const response = await apiClient.post<ApiResponse<any>>('/system/setup', data);
+export const setupSystem = async (data: SetupData): Promise<ApiResponse<void>> => {
+    const response = await apiClient.post<ApiResponse<void>>('/system/setup', data);
     return response.data;
 };
