@@ -1,13 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdminStore } from '../../store/useAdminStore';
 import { Trash2, Edit, Plus } from 'lucide-react';
 import CategoryForm from '../../components/admin/CategoryForm';
 import type { Category } from '../../types';
 
 const CategoryPage = () => {
-    const { categories, deleteCategory, addCategory, updateCategory } = useAdminStore();
+    const { 
+        categories, 
+        selectedBranchId, 
+        fetchCategories, 
+        deleteCategory, 
+        addCategory, 
+        updateCategory,
+        isLoading 
+    } = useAdminStore();
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+    useEffect(() => {
+        if (selectedBranchId) {
+            fetchCategories(selectedBranchId);
+        }
+    }, [selectedBranchId, fetchCategories]);
 
     const handleAddClick = () => {
         setEditingCategory(null);
@@ -19,12 +34,15 @@ const CategoryPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (data: Omit<Category, 'id'>) => {
+    const handleSubmit = async (data: Omit<Category, 'id'>) => {
+        if (!selectedBranchId) return;
+        
         if (editingCategory) {
-            updateCategory(editingCategory.id, data);
+            await updateCategory(editingCategory.id, data);
         } else {
-            addCategory(data);
+            await addCategory(selectedBranchId, data);
         }
+        setIsModalOpen(false);
     };
 
     return (

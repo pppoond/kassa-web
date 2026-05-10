@@ -1,17 +1,12 @@
-import axios from 'axios';
+import apiClient from './client';
+import type { AuthResponse, ApiResponse, LoginRequest, RegisterRequest } from '../types';
 
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
-});
+export const login = async (data: LoginRequest): Promise<AuthResponse> => {
+    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', data);
+    return response.data.data;
+};
 
-export interface RegisterRequest {
-    username: string;
-    password?: string;
-    fullName: string;
-    email?: string;
-}
-
-export const registerUser = async (data: RegisterRequest) => {
-    const response = await api.post('/auth/register', data);
-    return response.data;
+export const register = async (data: RegisterRequest): Promise<AuthResponse> => {
+    const response = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', data);
+    return response.data.data;
 };

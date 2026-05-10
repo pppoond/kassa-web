@@ -1,25 +1,12 @@
-import axios from 'axios';
+import apiClient from './client';
+import type { SystemStatus, SetupData, ApiResponse } from '../types';
 
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api',
-});
-
-export const getSystemStatus = async () => {
-    const response = await api.get('/system/status');
-    return response.data as { isSetupCompleted: boolean };
+export const getSystemStatus = async (): Promise<SystemStatus> => {
+    const response = await apiClient.get<ApiResponse<SystemStatus>>('/system/status');
+    return response.data.data;
 };
 
-export interface SetupRequest {
-    organizationName: string;
-    branchName: string;
-    branchAddress?: string;
-    adminUsername: string;
-    adminPassword?: string;
-    adminFullName: string;
-    adminEmail?: string;
-}
-
-export const setupSystem = async (data: SetupRequest) => {
-    const response = await api.post('/system/setup', data);
+export const setupSystem = async (data: SetupData): Promise<any> => {
+    const response = await apiClient.post<ApiResponse<any>>('/system/setup', data);
     return response.data;
 };

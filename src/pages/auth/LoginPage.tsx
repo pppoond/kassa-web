@@ -4,6 +4,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { Lock, User, Building, MapPin, Mail, UserPlus, CheckCircle } from 'lucide-react';
 import ThemeToggle from '../../components/common/ThemeToggle';
 import { getSystemStatus, setupSystem } from '../../api/system';
+import { login as loginApi } from '../../api/auth';
 
 const LoginPage: React.FC = () => {
     const [isSetupNeeded, setIsSetupNeeded] = useState<boolean | null>(null);
@@ -46,11 +47,25 @@ const LoginPage: React.FC = () => {
         checkStatus();
     }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (username.trim()) {
-            login(username);
+        if (!username || !password) {
+            setError('Please enter both username and password.');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await loginApi({ username, password });
+            login(response.user, response.token);
             navigate(from, { replace: true });
+        } catch (err: any) {
+            console.error('Login failed', err);
+            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -230,6 +245,12 @@ const LoginPage: React.FC = () => {
                             <p className="text-base-content/60 text-sm mt-1">Please enter your credentials to continue</p>
                         </div>
 
+                        {error && (
+                            <div className="alert alert-error mb-6 py-3 rounded-xl">
+                                <span className="text-sm font-medium">{error}</span>
+                            </div>
+                        )}
+
                         <form onSubmit={handleLogin} className="space-y-5">
                             <div className="form-control">
                                 <label className="label py-1">
@@ -259,6 +280,7 @@ const LoginPage: React.FC = () => {
                                         placeholder="••••••••" 
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                 </label>
                                 <div className="flex justify-end mt-2">
@@ -266,8 +288,12 @@ const LoginPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className="form-control mt-8">
-                                <button type="submit" className="btn btn-primary btn-lg h-14 rounded-xl text-lg font-bold shadow-lg shadow-primary/20">
-                                    Sign In
+                                <button 
+                                    type="submit" 
+                                    className={`btn btn-primary btn-lg h-14 rounded-xl text-lg font-bold shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Signing In...' : 'Sign In'}
                                 </button>
                             </div>
                         </form>

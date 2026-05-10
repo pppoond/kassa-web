@@ -1,13 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdminStore } from '../../store/useAdminStore';
 import { Trash2, Edit, Plus } from 'lucide-react';
 import MenuItemForm from '../../components/admin/MenuItemForm';
 import type { MenuItem } from '../../types';
 
 const MenuItemPage = () => {
-    const { menuItems, categories, deleteMenuItem, addMenuItem, updateMenuItem } = useAdminStore();
+    const { 
+        menuItems, 
+        categories, 
+        isLoading, 
+        fetchMenuItems, 
+        deleteMenuItem, 
+        addMenuItem, 
+        updateMenuItem 
+    } = useAdminStore();
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+
+    useEffect(() => {
+        fetchMenuItems();
+    }, [fetchMenuItems]);
 
     const getCategoryName = (id: string) => categories.find(c => c.id === id)?.name || 'Unknown';
 
@@ -21,12 +34,13 @@ const MenuItemPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (data: Omit<MenuItem, 'id'>) => {
+    const handleSubmit = async (data: Omit<MenuItem, 'id'>) => {
         if (editingItem) {
-            updateMenuItem(editingItem.id, data);
+            await updateMenuItem(editingItem.id, data);
         } else {
-            addMenuItem(data);
+            await addMenuItem(data);
         }
+        setIsModalOpen(false);
     };
 
     return (
