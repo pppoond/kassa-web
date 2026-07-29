@@ -55,3 +55,8 @@ export const deleteMenuItem = async (id: string): Promise<ApiResponse<void>> => 
     const response = await apiClient.delete<ApiResponse<void>>(`/menus/${id}`);
     return response.data;
 };
+
+export const toggleMenuItemActive = async (id: string): Promise<{ id: string; isActive: boolean }> => {
+    const response = await apiClient.patch<ApiResponse<{ id: string; isActive: boolean }>>(`/menus/${id}/deactivate`);
+    return response.data.data;
+};

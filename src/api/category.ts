@@ -17,3 +17,8 @@ export const updateCategory = async (id: string, data: UpdateCategoryRequest): P
     const response = await apiClient.put<ApiResponse<void>>(`/categories/${id}`, data);
     return response.data;
 };
+
+export const toggleCategoryActive = async (id: string): Promise<{ id: string; isActive: boolean }> => {
+    const response = await apiClient.patch<ApiResponse<{ id: string; isActive: boolean }>>(`/categories/${id}/deactivate`);
+    return response.data.data;
+};

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import type { Category } from '../../types';
 import { X } from 'lucide-react';
+import { Input, Textarea } from '../common/FormField';
 
 interface CategoryFormProps {
     initialData?: Category | null;
@@ -56,30 +57,17 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
                     {/* Body */}
                     <form onSubmit={handleSubmit(handleFormSubmit)}>
                         <div className="modal-body p-6 space-y-6">
-                            <div className="form-control">
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        placeholder="Category Name"
-                                        className="input input-floating input-bordered w-full peer"
-                                        id="catNameInput"
-                                        {...register('name', { required: true })}
-                                    />
-                                    <label htmlFor="catNameInput" className="input-floating-label">Name</label>
-                                </div>
-                            </div>
-                            
-                            <div className="form-control">
-                                <div className="relative">
-                                    <textarea
-                                        className="textarea textarea-floating textarea-bordered h-32 w-full peer"
-                                        placeholder="Category description..."
-                                        id="catDescriptionTextarea"
-                                        {...register('description')}
-                                    ></textarea>
-                                    <label htmlFor="catDescriptionTextarea" className="textarea-floating-label">Description</label>
-                                </div>
-                            </div>
+                            <Input
+                                label="Name"
+                                placeholder="Category name"
+                                registration={register('name', { required: true })}
+                            />
+                            <Textarea
+                                label="Description"
+                                placeholder="Category description..."
+                                rows={4}
+                                registration={register('description')}
+                            />
                         </div>
 
                         {/* Footer */}

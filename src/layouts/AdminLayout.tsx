@@ -1,13 +1,16 @@
 import { useEffect, Fragment } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, List, Coffee, MapPin, Check, ChevronDown } from 'lucide-react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, List, Coffee, MapPin, Check, ChevronDown, Settings2, Home, LogOut, Users } from 'lucide-react';
 import { Listbox, Transition } from '@headlessui/react';
 import { useAdminStore } from '../store/useAdminStore';
+import { useAuthStore } from '../store/useAuthStore';
 import ThemeToggle from '../components/common/ThemeToggle';
 
 const AdminLayout = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { branches, selectedBranchId, setSelectedBranch, fetchBranches } = useAdminStore();
+    const { logout } = useAuthStore();
 
     useEffect(() => {
         fetchBranches();
@@ -15,6 +18,11 @@ const AdminLayout = () => {
 
     const isActive = (path: string) => location.pathname === path;
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
     return (
         <div className="flex min-h-screen bg-base-100 transition-colors duration-400">
@@ -35,7 +43,7 @@ const AdminLayout = () => {
                             <span className="label-text font-bold text-[10px] uppercase opacity-40">Active Branch</span>
                         </label>
                         
-                        <Listbox value={selectedBranchId} onChange={setSelectedBranch}>
+                        <Listbox value={selectedBranchId ?? undefined} onChange={setSelectedBranch}>
                             <div className="relative mt-1">
                                 <Listbox.Button className="relative w-full cursor-default rounded-xl bg-base-100 py-3 pl-10 pr-10 text-left border border-base-300 focus:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 transition-all sm:text-sm shadow-sm hover:border-primary/50">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary">
@@ -93,6 +101,16 @@ const AdminLayout = () => {
                 
                 <nav className="flex-1 px-4 space-y-1">
                     <Link
+                        to="/"
+                        className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 text-base-content/70 hover:bg-base-300 hover:text-base-content"
+                    >
+                        <Home size={20} />
+                        Back to Home
+                    </Link>
+
+                    <div className="divider my-2 opacity-20"></div>
+
+                    <Link
                         to="/admin"
                         className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 ${isActive('/admin') ? 'bg-primary text-primary-content shadow-lg shadow-primary/20' : 'text-base-content/70 hover:bg-base-300 hover:text-base-content'
                             }`}
@@ -116,9 +134,32 @@ const AdminLayout = () => {
                         <Coffee size={20} />
                         Menu Items
                     </Link>
+                    <Link
+                        to="/admin/option-groups"
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 ${isActive('/admin/option-groups') ? 'bg-primary text-primary-content shadow-lg shadow-primary/20' : 'text-base-content/70 hover:bg-base-300 hover:text-base-content'
+                            }`}
+                    >
+                        <Settings2 size={20} />
+                        Option Groups
+                    </Link>
+                    <Link
+                        to="/admin/staff"
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 ${isActive('/admin/staff') ? 'bg-primary text-primary-content shadow-lg shadow-primary/20' : 'text-base-content/70 hover:bg-base-300 hover:text-base-content'
+                            }`}
+                    >
+                        <Users size={20} />
+                        Staff
+                    </Link>
                 </nav>
 
-                <div className="p-6">
+                <div className="p-6 space-y-3">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 text-error/70 hover:bg-error/10 hover:text-error w-full"
+                    >
+                        <LogOut size={20} />
+                        Logout
+                    </button>
                     <div className="bg-base-300/50 rounded-2xl p-4 flex items-center justify-between border border-base-300/50">
                          <div className="text-[10px] font-bold opacity-40 uppercase tracking-tighter">System v0.1.0</div>
                          <ThemeToggle />

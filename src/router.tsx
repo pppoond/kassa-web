@@ -9,12 +9,14 @@ const CustomerLayout = React.lazy(() => import('./layouts/CustomerLayout')); // 
 const DashboardPage = React.lazy(() => import('./pages/admin/DashboardPage'));
 const CategoryPage = React.lazy(() => import('./pages/admin/CategoryPage'));
 const MenuItemPage = React.lazy(() => import('./pages/admin/MenuItemPage'));
+const OptionGroupPage = React.lazy(() => import('./pages/admin/OptionGroupPage'));
+const StaffPage = React.lazy(() => import('./pages/admin/StaffPage'));
 const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
 const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage')); // Restore this
 const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage'));
 const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'));
-const RegisterPage = React.lazy(() => import('./pages/auth/RegisterPage'));
+const GodResetPage = React.lazy(() => import('./pages/auth/GodResetPage'));
 
 // Loading component
 const Loading = () => (
@@ -33,10 +35,10 @@ const router = createBrowserRouter([
         ),
     },
     {
-        path: '/register',
+        path: '/god-reset',
         element: (
             <Suspense fallback={<Loading />}>
-                <RegisterPage />
+                <GodResetPage />
             </Suspense>
         ),
     },
@@ -120,6 +122,22 @@ const router = createBrowserRouter([
                         element: (
                             <Suspense fallback={<Loading />}>
                                 <MenuItemPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'option-groups',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <OptionGroupPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'staff',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <StaffPage />
                             </Suspense>
                         ),
                     },

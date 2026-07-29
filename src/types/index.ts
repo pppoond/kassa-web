@@ -5,3 +5,4 @@ export * from './menuItem';
 export * from './branch';
 export * from './system';
 export * from './menu';
+export * from './optionGroup';

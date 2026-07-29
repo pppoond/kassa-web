@@ -20,4 +20,5 @@ export interface RegisterRequest {
     password?: string;
     fullName: string;
     email?: string;
+    avatarUrl?: string;
 }

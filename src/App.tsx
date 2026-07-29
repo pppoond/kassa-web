@@ -1,10 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { Monitor, LayoutDashboard, Utensils, FileText } from 'lucide-react';
-import Button from './components/common/Button';
+import { Monitor, LayoutDashboard, Utensils, FileText, LogOut } from 'lucide-react';
 import ThemeToggle from './components/common/ThemeToggle';
+import { useAuthStore } from './store/useAuthStore';
 
 const App = () => {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen p-8 transition-colors duration-400 bg-base-200 flex flex-col items-center justify-center">
@@ -13,7 +19,9 @@ const App = () => {
           <h1 className="text-5xl font-black tracking-tight text-primary">Kindee POS</h1>
           <p className="text-base-content/60 mt-2 font-medium">Professional Restaurant Management System</p>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
@@ -66,7 +74,15 @@ const App = () => {
         </button>
       </div>
       
-      <div className="mt-20 text-base-content/40 text-sm font-medium">
+      <button
+        onClick={handleLogout}
+        className="btn btn-error btn-lg gap-3 mt-12 px-10 rounded-xl font-bold shadow-lg shadow-error/20"
+      >
+        <LogOut size={22} />
+        Logout
+      </button>
+
+      <div className="mt-8 text-base-content/40 text-sm font-medium">
         &copy; 2026 Kindee POS Technologies. All rights reserved.
       </div>
     </div>

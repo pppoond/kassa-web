@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import type { MenuItem } from '../../types';
 import { useAdminStore } from '../../store/useAdminStore';
-import { X } from 'lucide-react';
+import { X, Upload, ImageIcon } from 'lucide-react';
+import { Input, Textarea, Select, Toggle } from '../common/FormField';
+import { uploadFile } from '../../api/upload';
 
 interface MenuItemFormProps {
     initialData?: MenuItem | null;
@@ -11,12 +13,27 @@ interface MenuItemFormProps {
     isOpen: boolean;
 }
 
+interface FormData {
+    name: string;
+    description: string;
+    price: number;
+    categoryId: string;
+    imageUrl: string;
+    isAvailable: boolean;
+}
+
 const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormProps) => {
-    const { register, handleSubmit, reset, setValue } = useForm<Omit<MenuItem, 'id'>>();
+    const { register, handleSubmit, reset, setValue } = useForm<FormData>();
     const categories = useAdminStore((state) => state.categories);
+
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (isOpen) {
+            setUploadError('');
             if (initialData) {
                 setValue('name', initialData.name);
                 setValue('description', initialData.description || '');
@@ -24,6 +41,7 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                 setValue('categoryId', initialData.categoryId);
                 setValue('imageUrl', initialData.imageUrl || '');
                 setValue('isAvailable', initialData.isAvailable);
+                setPreviewUrl(initialData.imageUrl || null);
             } else {
                 reset({
                     name: '',
@@ -33,16 +51,48 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                     imageUrl: '',
                     isAvailable: true
                 });
+                setPreviewUrl(null);
             }
         }
     }, [initialData, isOpen, reset, setValue]);
 
-    const handleFormSubmit = (data: Omit<MenuItem, 'id'>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate client-side
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            setUploadError('Only JPEG, PNG, WebP, and GIF are allowed');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            setUploadError('File size exceeds 5MB limit');
+            return;
+        }
+
+        setUploadError('');
+        setUploading(true);
+
+        try {
+            const url = await uploadFile(file, 'menus');
+            setValue('imageUrl', url);
+            setPreviewUrl(url);
+        } catch (err: any) {
+            setUploadError(err.response?.data?.message || 'Upload failed');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleFormSubmit = (data: FormData) => {
         onSubmit({
             ...data,
             price: Number(data.price)
         });
     };
+
+    const categoryOptions = categories.map(c => ({ value: c.id, label: c.name }));
 
     return (
         <div 
@@ -70,80 +120,79 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                     <form onSubmit={handleSubmit(handleFormSubmit)}>
                         <div className="modal-body p-6 space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="form-control">
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            placeholder="Item Name"
-                                            className="input input-floating input-bordered w-full peer"
-                                            id="nameInput"
-                                            {...register('name', { required: true })}
-                                        />
-                                        <label htmlFor="nameInput" className="input-floating-label">Name</label>
-                                    </div>
+                                <Input
+                                    label="Name"
+                                    placeholder="Item name"
+                                    registration={register('name', { required: true })}
+                                />
+                                <Select
+                                    label="Category"
+                                    placeholder="Select Category"
+                                    options={categoryOptions}
+                                    registration={register('categoryId', { required: true })}
+                                />
+                                <Input
+                                    label="Price (฿)"
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="0.00"
+                                    registration={register('price', { required: true, min: 0 })}
+                                />
+                                <div className="form-control justify-end pb-2">
+                                    <Toggle label="Available" color="primary" registration={register('isAvailable')} />
                                 </div>
-                                <div className="form-control">
-                                    <div className="relative">
-                                        <select
-                                            className="select select-floating select-bordered w-full peer"
-                                            id="categorySelect"
-                                            {...register('categoryId', { required: true })}
+                            </div>
+
+                            {/* Image Upload */}
+                            <div className="form-control">
+                                <label className="label py-1">
+                                    <span className="label-text font-bold text-xs uppercase opacity-50">Image</span>
+                                </label>
+                                <div className="flex items-start gap-4">
+                                    {/* Preview */}
+                                    <div className="w-24 h-24 rounded-xl border border-base-300 bg-base-200 flex items-center justify-center overflow-hidden shrink-0">
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <ImageIcon size={32} className="text-base-content/20" />
+                                        )}
+                                    </div>
+                                    {/* Upload Button */}
+                                    <div className="flex-1 space-y-2">
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp,image/gif"
+                                            className="hidden"
+                                            onChange={handleFileChange}
+                                        />
+                                        <button
+                                            type="button"
+                                            className={`btn btn-sm btn-outline gap-2 ${uploading ? 'loading' : ''}`}
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={uploading}
                                         >
-                                            <option value="" disabled>Select Category</option>
-                                            {categories.map(c => (
-                                                <option key={c.id} value={c.id}>{c.name}</option>
-                                            ))}
-                                        </select>
-                                        <label htmlFor="categorySelect" className="select-floating-label">Category</label>
+                                            {!uploading && <Upload size={16} />}
+                                            {uploading ? 'Uploading...' : 'Choose Image'}
+                                        </button>
+                                        <p className="text-xs text-base-content/40">
+                                            JPEG, PNG, WebP, GIF — max 5MB
+                                        </p>
+                                        {uploadError && (
+                                            <p className="text-xs text-error font-medium">{uploadError}</p>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="form-control">
-                                    <div className="relative">
-                                        <input
-                                            type="number"
-                                            step="0.01"
-                                            placeholder="0.00"
-                                            className="input input-floating input-bordered w-full peer"
-                                            id="priceInput"
-                                            {...register('price', { required: true, min: 0 })}
-                                        />
-                                        <label htmlFor="priceInput" className="input-floating-label">Price (฿)</label>
-                                    </div>
-                                </div>
-                                <div className="form-control flex flex-row items-center gap-4 px-2">
-                                    <span className="label-text font-medium">Available Status</span>
-                                    <input
-                                        type="checkbox"
-                                        className="toggle toggle-primary"
-                                        {...register('isAvailable')}
-                                    />
-                                </div>
+                                {/* Hidden field to store the URL */}
+                                <input type="hidden" {...register('imageUrl')} />
                             </div>
 
-                            <div className="form-control">
-                                <div className="relative">
-                                    <input
-                                        type="url"
-                                        placeholder="https://example.com/image.jpg"
-                                        className="input input-floating input-bordered w-full peer"
-                                        id="imageUrlInput"
-                                        {...register('imageUrl')}
-                                    />
-                                    <label htmlFor="imageUrlInput" className="input-floating-label">Image URL</label>
-                                </div>
-                            </div>
-
-                            <div className="form-control">
-                                <div className="relative">
-                                    <textarea
-                                        className="textarea textarea-floating textarea-bordered h-28 w-full peer"
-                                        placeholder="Item description..."
-                                        id="descriptionTextarea"
-                                        {...register('description')}
-                                    ></textarea>
-                                    <label htmlFor="descriptionTextarea" className="textarea-floating-label">Description</label>
-                                </div>
-                            </div>
+                            <Textarea
+                                label="Description"
+                                placeholder="Item description..."
+                                rows={3}
+                                registration={register('description')}
+                            />
                         </div>
 
                         {/* Footer */}
@@ -158,6 +207,7 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                             <button
                                 className="btn btn-primary px-8 shadow-lg shadow-primary/20"
                                 type="submit"
+                                disabled={uploading}
                             >
                                 {initialData ? 'Update Item' : 'Create Item'}
                             </button>

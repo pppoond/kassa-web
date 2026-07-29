@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAdminStore } from '../../store/useAdminStore';
-import { Trash2, Edit, Plus, Search, Filter } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Filter, ToggleLeft, ToggleRight } from 'lucide-react';
 import MenuItemForm from '../../components/admin/MenuItemForm';
+import { toggleMenuItemActive } from '../../api/menuItem';
 import type { MenuItem } from '../../types';
 
 const MenuItemPage = () => {
@@ -148,6 +149,13 @@ const MenuItemPage = () => {
                                 </td>
                                 <td className="text-right">
                                     <div className="flex justify-end gap-1">
+                                        <button
+                                            className={`btn btn-sm btn-circle btn-ghost ${item.isAvailable ? 'hover:bg-warning/10 hover:text-warning' : 'hover:bg-success/10 hover:text-success'}`}
+                                            onClick={async () => { await toggleMenuItemActive(item.id); fetchMenuItems(); }}
+                                            title={item.isAvailable ? 'Deactivate' : 'Activate'}
+                                        >
+                                            {item.isAvailable ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+                                        </button>
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-primary/10 hover:text-primary"
                                             onClick={() => handleEditClick(item)}
