@@ -1,30 +1,29 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Languages } from 'lucide-react';
+import { SelectListbox } from './FormField';
+
+const LANGUAGES = [
+    { value: 'th', label: 'Thai' },
+    { value: 'en', label: 'English' },
+];
 
 const LanguageSwitcher: React.FC = () => {
     const { i18n } = useTranslation();
 
-    const toggleLanguage = () => {
-        const nextLang = i18n.language === 'th' ? 'en' : 'th';
-        i18n.changeLanguage(nextLang);
+    const handleChange = (value: string) => {
+        i18n.changeLanguage(value);
     };
 
     return (
-        <button
-            onClick={toggleLanguage}
-            className="btn btn-ghost btn-circle"
-            title={i18n.language === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
-        >
-            <div className="indicator">
-                <Languages size={24} />
-                <span className="badge badge-xs badge-primary indicator-item">
-                    {i18n.language === 'th' ? 'TH' : 'EN'}
-                </span>
-            </div>
-        </button>
+        <div className="w-32">
+            <SelectListbox
+                label=""
+                options={LANGUAGES}
+                value={i18n.language}
+                onChange={handleChange}
+            />
+        </div>
     );
 };
 
 export default LanguageSwitcher;
-

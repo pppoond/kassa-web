@@ -16,6 +16,7 @@ const TablePage = React.lazy(() => import('./pages/admin/TablePage'));
 const BranchPage = React.lazy(() => import('./pages/admin/BranchPage'));
 const PosHomePage = React.lazy(() => import('./pages/pos/PosHomePage'));
 const PosTablesPage = React.lazy(() => import('./pages/pos/PosTablesPage'));
+const PosSelectBranchPage = React.lazy(() => import('./pages/pos/PosSelectBranchPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
 const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage'));
 const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage'));
@@ -72,6 +73,14 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <App />,
+            },
+            {
+                path: '/pos/select-branch',
+                element: (
+                    <Suspense fallback={<Loading />}>
+                        <PosSelectBranchPage />
+                    </Suspense>
+                ),
             },
             {
                 path: '/pos',

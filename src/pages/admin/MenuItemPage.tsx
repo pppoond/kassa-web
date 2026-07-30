@@ -25,6 +25,14 @@ const MenuItemPage = () => {
         fetchMenuItems();
     }, [fetchMenuItems]);
 
+    const { selectedBranchId, fetchCategories } = useAdminStore();
+
+    useEffect(() => {
+        if (selectedBranchId) {
+            fetchCategories(selectedBranchId);
+        }
+    }, [selectedBranchId, fetchCategories]);
+
     const getCategoryName = (id: string) => categories.find(c => c.id === id)?.name || 'Unknown';
 
     const handleAddClick = () => {
@@ -163,7 +171,7 @@ const MenuItemPage = () => {
                                     </div>
                                 </td>
                                 <td className="hidden sm:table-cell">
-                                    <span className="badge badge-outline badge-sm md:badge-md py-2 md:py-3">{getCategoryName(item.categoryId)}</span>
+                                    <span className="badge badge-outline badge-sm md:badge-md py-2 md:py-3">{item.categoryName || 'Unknown'}</span>
                                 </td>
                                 <td className="font-bold text-sm md:text-lg text-primary">
                                     ฿{item.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}

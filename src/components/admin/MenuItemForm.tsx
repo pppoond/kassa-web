@@ -23,7 +23,16 @@ interface FormData {
 }
 
 const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormProps) => {
-    const { register, handleSubmit, reset, setValue, control } = useForm<FormData>();
+    const { register, handleSubmit, reset, setValue, control } = useForm<FormData>({
+        defaultValues: {
+            name: '',
+            description: '',
+            price: 0,
+            categoryId: '',
+            imageUrl: '',
+            isAvailable: true
+        }
+    });
     const categories = useAdminStore((state) => state.categories);
 
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -35,12 +44,14 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
         if (isOpen) {
             setUploadError('');
             if (initialData) {
-                setValue('name', initialData.name);
-                setValue('description', initialData.description || '');
-                setValue('price', initialData.price);
-                setValue('categoryId', initialData.categoryId);
-                setValue('imageUrl', initialData.imageUrl || '');
-                setValue('isAvailable', initialData.isAvailable);
+                reset({
+                    name: initialData.name,
+                    description: initialData.description || '',
+                    price: initialData.price,
+                    categoryId: initialData.categoryId,
+                    imageUrl: initialData.imageUrl || '',
+                    isAvailable: initialData.isAvailable
+                });
                 setPreviewUrl(initialData.imageUrl || null);
             } else {
                 reset({
@@ -54,7 +65,7 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                 setPreviewUrl(null);
             }
         }
-    }, [initialData, isOpen, reset, setValue]);
+    }, [initialData, isOpen, reset]);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

@@ -13,6 +13,7 @@ interface AdminState {
     error: string | null;
     
     setSelectedBranch: (id: string) => void;
+    clearSelectedBranch: () => void;
     fetchBranches: (orgId?: string) => Promise<void>;
     fetchCategories: (branchId: string) => Promise<void>;
     fetchMenuItems: (categoryId?: string) => Promise<void>;
@@ -28,15 +29,21 @@ interface AdminState {
 
 export const useAdminStore = create<AdminState>((set, get) => ({
     branches: [],
-    selectedBranchId: null,
+    selectedBranchId: localStorage.getItem('selectedBranchId'),
     categories: [],
     menuItems: [],
     isLoading: false,
     error: null,
 
     setSelectedBranch: (id: string) => {
+        localStorage.setItem('selectedBranchId', id);
         set({ selectedBranchId: id });
         get().fetchCategories(id);
+    },
+
+    clearSelectedBranch: () => {
+        localStorage.removeItem('selectedBranchId');
+        set({ selectedBranchId: null });
     },
 
     fetchBranches: async (orgId) => {
@@ -44,9 +51,6 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         try {
             const data = await branchApi.getBranches(orgId);
             set({ branches: data, isLoading: false });
-            if (data.length > 0 && !get().selectedBranchId) {
-                get().setSelectedBranch(data[0].id);
-            }
         } catch (err: any) {
             set({ error: err.message, isLoading: false });
         }
@@ -69,6 +73,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
             const items = data.map(item => ({
                 id: item.id,
                 categoryId: item.categoryId,
+                categoryName: item.categoryName,
                 name: item.name,
                 description: item.description,
                 price: item.price,

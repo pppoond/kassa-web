@@ -4,25 +4,28 @@ import type { MenuItem, CreateMenuItemRequest, UpdateMenuItemRequest, ApiRespons
 interface MenuItemBackend {
     id: string;
     categoryId: string;
+    categoryName: string;
     name: string;
     description: string | null;
-    basePrice: number;
+    price: number;
     imageUrl: string | null;
     isActive: boolean;
 }
 
 export const getMenuItems = async (categoryId?: string): Promise<MenuItem[]> => {
     const response = await apiClient.get<ApiResponse<PagedList<MenuItemBackend>>>('/menus/items', {
-        params: { categoryId }
+        params: { categoryId, pageSize: 200 }
     });
     
-    // Map backend property names (basePrice -> price, isActive -> isAvailable)
-    return response.data.data.items.map((item) => ({
+    const items = response.data.data?.items ?? [];
+    
+    return items.map((item) => ({
         id: item.id,
         categoryId: item.categoryId,
+        categoryName: item.categoryName,
         name: item.name,
         description: item.description || undefined,
-        price: item.basePrice,
+        price: item.price ?? 0,
         imageUrl: item.imageUrl || undefined,
         isAvailable: item.isActive
     }));

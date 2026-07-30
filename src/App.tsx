@@ -2,14 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { Monitor, LayoutDashboard, Utensils, FileText, LogOut } from 'lucide-react';
 import ThemeToggle from './components/common/ThemeToggle';
 import { useAuthStore } from './store/useAuthStore';
+import { useAdminStore } from './store/useAdminStore';
 
 const App = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
+  const { clearSelectedBranch } = useAdminStore();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handlePosClick = () => {
+    clearSelectedBranch();
+    navigate('/pos/select-branch');
   };
 
   return (
@@ -28,7 +35,7 @@ const App = () => {
         {/* POS Button */}
         <button
           className="group relative h-72 bg-base-100 rounded-2xl shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-center justify-center gap-6 overflow-hidden border border-base-300"
-          onClick={() => navigate('/pos')}
+          onClick={handlePosClick}
         >
           <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="p-5 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-content transition-colors duration-300">
