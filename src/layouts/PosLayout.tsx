@@ -2,11 +2,14 @@ import { useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Store, LayoutGrid, Receipt, Settings, LogOut, MapPin } from 'lucide-react';
 import ThemeToggle from '../components/common/ThemeToggle';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 import { cn } from '../utils/cn';
 import { useAdminStore } from '../store/useAdminStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { useTranslation } from 'react-i18next';
 
 const PosLayout = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { branches, selectedBranchId, fetchBranches } = useAdminStore();
@@ -42,32 +45,37 @@ const PosLayout = () => {
                     <Link
                         to="/pos/home"
                         className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/home') ? "btn-active btn-neutral" : "btn-ghost")}
+                        title={t('nav.posHome')}
                     >
                         <Store className="w-6 h-6" />
                     </Link>
                     <Link
                         to="/pos/tables"
                         className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/tables') ? "btn-active btn-neutral" : "btn-ghost")}
+                        title={t('nav.posTables')}
                     >
                         <LayoutGrid className="w-6 h-6" />
                     </Link>
                     <Link
                         to="/pos/orders"
                         className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/orders') ? "btn-active btn-neutral" : "btn-ghost")}
+                        title={t('nav.posOrders')}
                     >
                         <Receipt className="w-6 h-6" />
                     </Link>
                     <Link
                         to="/pos/settings"
                         className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/settings') ? "btn-active btn-neutral" : "btn-ghost")}
+                        title={t('nav.posSettings')}
                     >
                         <Settings className="w-6 h-6" />
                     </Link>
                 </div>
 
                 <div className="mt-auto flex flex-col gap-4 w-full px-2 items-center">
+                    <LanguageSwitcher />
                     <ThemeToggle />
-                    <Link to="/" className="btn btn-square btn-ghost w-full h-14 rounded-xl text-error">
+                    <Link to="/" className="btn btn-square btn-ghost w-full h-14 rounded-xl text-error" title={t('common.logout')}>
                         <LogOut className="w-6 h-6" />
                     </Link>
                 </div>
@@ -80,23 +88,24 @@ const PosLayout = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 text-sm">
                             <MapPin size={16} className="text-primary" />
-                            <span className="font-bold">{selectedBranch?.name || 'ไม่ได้เลือกสาขา'}</span>
+                            <span className="font-bold">{selectedBranch?.name || t('nav.selectBranch')}</span>
                         </div>
                         <Link
                             to="/pos/select-branch"
                             className="btn btn-primary btn-xs text-white"
                         >
-                            เปลี่ยน
+                            {t('common.edit')}
                         </Link>
                     </div>
                     <div className="flex items-center gap-2">
+                        <LanguageSwitcher />
                         <ThemeToggle />
                         <button
                             onClick={handleLogout}
                             className="btn btn-error btn-sm gap-2 text-white"
                         >
                             <LogOut size={16} />
-                            <span className="hidden sm:inline">ออกระบบ</span>
+                            <span className="hidden sm:inline">{t('common.logout')}</span>
                         </button>
                     </div>
                 </header>
@@ -114,28 +123,28 @@ const PosLayout = () => {
                     className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/home') && "text-primary")}
                 >
                     <Store className="w-5 h-5" />
-                    <span className="text-[10px]">Counter</span>
+                    <span className="text-[10px]">{t('nav.posHome')}</span>
                 </Link>
                 <Link
                     to="/pos/tables"
                     className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/tables') && "text-primary")}
                 >
                     <LayoutGrid className="w-5 h-5" />
-                    <span className="text-[10px]">Tables</span>
+                    <span className="text-[10px]">{t('nav.posTables')}</span>
                 </Link>
                 <Link
                     to="/pos/orders"
                     className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/orders') && "text-primary")}
                 >
                     <Receipt className="w-5 h-5" />
-                    <span className="text-[10px]">Orders</span>
+                    <span className="text-[10px]">{t('nav.posOrders')}</span>
                 </Link>
                 <Link
                     to="/pos/settings"
                     className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/settings') && "text-primary")}
                 >
                     <Settings className="w-5 h-5" />
-                    <span className="text-[10px]">Settings</span>
+                    <span className="text-[10px]">{t('nav.posSettings')}</span>
                 </Link>
             </div>
         </div>

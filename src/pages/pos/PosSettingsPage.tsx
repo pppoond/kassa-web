@@ -3,14 +3,16 @@ import { MapPin, Palette, Info } from 'lucide-react';
 import { useAdminStore } from '../../store/useAdminStore';
 import ThemeToggle from '../../components/common/ThemeToggle';
 import LanguageSwitcher from '../../components/common/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const PosSettingsPage = () => {
+    const { t } = useTranslation();
     const { branches, selectedBranchId } = useAdminStore();
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
 
     return (
         <div className="h-full overflow-y-auto p-4 md:p-6 bg-base-200/50">
-            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Settings</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">{t('pos.settingsTitle')}</h2>
 
             <div className="max-w-lg space-y-4">
                 {/* Branch Info */}
@@ -18,7 +20,7 @@ const PosSettingsPage = () => {
                     <div className="card-body p-5">
                         <h3 className="font-bold flex items-center gap-2 mb-3">
                             <MapPin size={18} className="text-primary" />
-                            สาขาที่ใช้งาน
+                            {t('nav.activeBranch')}
                         </h3>
                         <div className="bg-base-200 rounded-xl p-4">
                             <p className="font-bold text-lg">{selectedBranch?.name || '-'}</p>
@@ -30,7 +32,7 @@ const PosSettingsPage = () => {
                             to="/pos/select-branch"
                             className="btn btn-primary btn-sm mt-3 text-white"
                         >
-                            เปลี่ยนสาขา
+                            {t('common.edit')}
                         </Link>
                     </div>
                 </div>
@@ -40,14 +42,14 @@ const PosSettingsPage = () => {
                     <div className="card-body p-5">
                         <h3 className="font-bold flex items-center gap-2 mb-3">
                             <Palette size={18} className="text-primary" />
-                            หน้าตา & ภาษา
+                            {t('pos.themeMode')} & {t('pos.language')}
                         </h3>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium">ธีม</span>
+                            <span className="text-sm font-medium">{t('pos.themeMode')}</span>
                             <ThemeToggle />
                         </div>
                         <div className="flex items-center justify-between mt-3">
-                            <span className="text-sm font-medium">ภาษา</span>
+                            <span className="text-sm font-medium">{t('pos.language')}</span>
                             <LanguageSwitcher />
                         </div>
                     </div>
@@ -58,7 +60,7 @@ const PosSettingsPage = () => {
                     <div className="card-body p-5">
                         <h3 className="font-bold flex items-center gap-2 mb-3">
                             <Info size={18} className="text-primary" />
-                            ข้อมูลระบบ
+                            System Info
                         </h3>
                         <div className="text-sm space-y-1 text-base-content/70">
                             <p>Version: <span className="font-mono">0.1.0</span></p>

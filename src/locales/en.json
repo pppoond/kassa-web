@@ -18,8 +18,38 @@
     "name": "Name",
     "description": "Description",
     "back": "Back",
+    "next": "Next",
     "logout": "Logout",
-    "backToHome": "Back to Home"
+    "backToHome": "Back to Home",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "details": "Details",
+    "total": "Total",
+    "price": "Price",
+    "quantity": "Quantity"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pos": "POS System",
+    "posHome": "POS",
+    "posOrders": "Orders",
+    "posTables": "Tables",
+    "posSettings": "Settings",
+    "categories": "Categories",
+    "menuItems": "Menu Items",
+    "optionGroups": "Option Groups",
+    "staff": "Staff",
+    "tables": "Tables",
+    "branches": "Branches",
+    "reports": "Reports",
+    "kitchen": "Kitchen",
+    "backoffice": "Backoffice",
+    "activeBranch": "Active Branch",
+    "selectBranch": "Select Branch...",
+    "administration": "Administration"
   },
   "auth": {
     "login": "Sign In",
@@ -30,7 +60,30 @@
     "enterCredentials": "Please enter your credentials to continue",
     "signingIn": "Signing In...",
     "signIn": "Sign In",
-    "contactAdmin": "Contact your administrator to get an account"
+    "contactAdmin": "Contact your administrator to get an account",
+    "loginFailed": "Login failed. Please check your credentials.",
+    "enterBoth": "Please enter both username and password."
+  },
+  "setup": {
+    "title": "System Setup Wizard",
+    "step1": "1. Organization & Branch",
+    "step2": "2. Admin Account",
+    "step1Desc": "Setup top-level organization and your first store branch",
+    "step2Desc": "Create your super administrator account",
+    "orgName": "Organization Name",
+    "orgNamePlaceholder": "e.g., Kindee Restaurant Group",
+    "branchName": "First Branch Name",
+    "branchNamePlaceholder": "e.g., Main Branch",
+    "branchAddress": "Branch Address",
+    "branchAddressPlaceholder": "e.g., 123 Sukhumvit Rd, Bangkok",
+    "adminUsername": "Admin Username",
+    "adminPassword": "Admin Password",
+    "adminFullName": "Admin Full Name",
+    "adminFullNamePlaceholder": "e.g., John Doe",
+    "adminEmail": "Admin Email (Optional)",
+    "completeSetup": "Complete Setup",
+    "settingUp": "Setting up...",
+    "setupSuccess": "System setup completed! Please login with your new admin account."
   },
   "godReset": {
     "title": "God Mode",
@@ -58,7 +111,7 @@
   },
   "pos": {
     "searchMenu": "Search menu...",
-    "allCategories": "All",
+    "allCategories": "All Categories",
     "currentOrder": "Current Order",
     "items": "items",
     "noItems": "No items selected",
@@ -72,7 +125,30 @@
     "addToCart": "Add to Cart",
     "skip": "Skip",
     "orderPlaced": "Order placed! Round #",
-    "selectTableFirst": "Please select a table and add items"
+    "selectTableFirst": "Please select a table and add items",
+    "table": "Table",
+    "ordersTitle": "Order History",
+    "tablesTitle": "Table Layout & Status",
+    "selectBranchTitle": "Select Working Branch",
+    "settingsTitle": "POS System Settings",
+    "filterAll": "All Orders",
+    "filterPending": "Pending Payment",
+    "filterPaid": "Paid / Completed",
+    "filterCancelled": "Cancelled",
+    "emptyOrders": "No orders found",
+    "available": "Available",
+    "occupied": "Occupied",
+    "reserved": "Reserved",
+    "orderRound": "Round",
+    "markPaid": "Mark Paid",
+    "cancelOrder": "Cancel Order",
+    "receipt": "Receipt",
+    "customer": "Customer",
+    "cashier": "Cashier",
+    "branchInfo": "Branch Info",
+    "printerSettings": "Printer Settings",
+    "themeMode": "Theme Mode",
+    "language": "Language"
   },
   "kitchen": {
     "title": "Kitchen Display System",
@@ -97,7 +173,12 @@
     "staff": "Staff",
     "tables": "Tables",
     "branches": "Branches",
-    "addNew": "Add New"
+    "addNew": "Add New",
+    "totalSales": "Total Sales",
+    "totalOrders": "Total Orders",
+    "activeTables": "Active Tables",
+    "totalStaff": "Total Staff",
+    "overview": "Store Overview & Quick Actions"
   },
   "categories": {
     "title": "Categories",
@@ -106,7 +187,8 @@
     "editCategory": "Edit Category",
     "addCategory": "Add New Category",
     "name": "Category Name",
-    "noCategories": "No categories found"
+    "noCategories": "No categories found",
+    "displayOrder": "Display Order"
   },
   "menuItems": {
     "title": "Menu Items",
@@ -120,7 +202,9 @@
     "allCategories": "All Categories",
     "imageUrl": "Image",
     "available": "Available",
-    "noItems": "No menu items found"
+    "noItems": "No menu items found",
+    "selectCategory": "-- Select Category --",
+    "optionGroups": "Linked Option Groups"
   },
   "optionGroups": {
     "title": "Option Groups",
@@ -171,7 +255,8 @@
     "name": "Table Name",
     "generateQr": "Generate QR",
     "scanToOrder": "Scan to order",
-    "noTables": "No tables found"
+    "noTables": "No tables found",
+    "qrTitle": "Table QR Code"
   },
   "branches": {
     "title": "Branches",
@@ -219,6 +304,9 @@
     "placeOrder": "Place Order",
     "sending": "Sending...",
     "orderSuccess": "Order sent! Round #",
-    "selectOptions": "Select options"
+    "selectOptions": "Select options",
+    "menu": "Menu",
+    "welcome": "Welcome to",
+    "table": "Table"
   }
 }

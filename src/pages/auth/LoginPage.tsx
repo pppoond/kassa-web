@@ -3,11 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Lock, User, Building, MapPin, UserPlus } from 'lucide-react';
 import ThemeToggle from '../../components/common/ThemeToggle';
+import LanguageSwitcher from '../../components/common/LanguageSwitcher';
 import { InputWithIcon } from '../../components/common/FormField';
 import { getSystemStatus, setupSystem } from '../../api/system';
 import { login as loginApi } from '../../api/auth';
+import { useTranslation } from 'react-i18next';
 
 const LoginPage: React.FC = () => {
+    const { t } = useTranslation();
     const [isSetupNeeded, setIsSetupNeeded] = useState<boolean | null>(null);
     const [setupStep, setSetupStep] = useState(1);
     
@@ -51,7 +54,7 @@ const LoginPage: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username || !password) {
-            setError('Please enter both username and password.');
+            setError(t('auth.enterBoth'));
             return;
         }
 
@@ -64,7 +67,7 @@ const LoginPage: React.FC = () => {
             navigate(from, { replace: true });
         } catch (err: any) {
             console.error('Login failed', err);
-            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            setError(err.response?.data?.message || t('auth.loginFailed'));
         } finally {
             setLoading(false);
         }
@@ -77,7 +80,7 @@ const LoginPage: React.FC = () => {
         try {
             await setupSystem(setupData);
             setIsSetupNeeded(false);
-            alert('System setup completed! Please login with your new admin account.');
+            alert(t('setup.setupSuccess'));
         } catch (err: any) {
             setError(err.response?.data?.message || 'Setup failed. Please try again.');
         } finally {
@@ -96,20 +99,21 @@ const LoginPage: React.FC = () => {
     if (isSetupNeeded) {
         return (
             <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-4 md:p-6 transition-colors duration-400">
-                <div className="absolute top-4 right-4 md:top-8 md:right-8">
+                <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-2">
+                    <LanguageSwitcher />
                     <ThemeToggle />
                 </div>
 
                 <div className="w-full max-w-[500px]">
                     <div className="text-center mb-8 md:mb-10">
                         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-primary">KINDEE</h1>
-                        <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs font-bold">First Time Setup</p>
+                        <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs font-bold">{t('setup.title')}</p>
                     </div>
 
                     <div className="card bg-base-100 shadow-2xl border border-base-300">
                         <div className="card-body p-8 md:p-10">
                             <div className="flex justify-between items-center mb-8">
-                                <h2 className="text-2xl font-bold">Initial Configuration</h2>
+                                <h2 className="text-2xl font-bold">{setupStep === 1 ? t('setup.step1') : t('setup.step2')}</h2>
                                 <div className="text-xs font-bold opacity-40">STEP {setupStep} OF 2</div>
                             </div>
 
@@ -123,36 +127,36 @@ const LoginPage: React.FC = () => {
                                 {setupStep === 1 ? (
                                     <>
                                         <InputWithIcon
-                                            label="Business Name"
-                                            placeholder="My Awesome Restaurant"
+                                            label={t('setup.orgName')}
+                                            placeholder={t('setup.orgNamePlaceholder')}
                                             value={setupData.organizationName}
                                             onChange={(e) => setSetupData({...setupData, organizationName: e.target.value})}
                                             icon={<Building size={20} />}
                                             required
                                         />
                                         <InputWithIcon
-                                            label="Main Branch Name"
-                                            placeholder="HQ / Main Branch"
+                                            label={t('setup.branchName')}
+                                            placeholder={t('setup.branchNamePlaceholder')}
                                             value={setupData.branchName}
                                             onChange={(e) => setSetupData({...setupData, branchName: e.target.value})}
                                             icon={<MapPin size={20} />}
                                             required
                                         />
                                         <button type="submit" className="btn btn-primary btn-lg w-full h-14 rounded-xl font-bold mt-6">
-                                            Next: Admin Account
+                                            {t('common.next')}: {t('setup.step2')}
                                         </button>
                                     </>
                                 ) : (
                                     <>
                                         <InputWithIcon
-                                            label="Admin Username"
+                                            label={t('setup.adminUsername')}
                                             value={setupData.adminUsername}
                                             onChange={(e) => setSetupData({...setupData, adminUsername: e.target.value})}
                                             icon={<User size={20} />}
                                             required
                                         />
                                         <InputWithIcon
-                                            label="Admin Password"
+                                            label={t('setup.adminPassword')}
                                             type="password"
                                             placeholder="••••••••"
                                             value={setupData.adminPassword}
@@ -161,21 +165,21 @@ const LoginPage: React.FC = () => {
                                             required
                                         />
                                         <InputWithIcon
-                                            label="Admin Full Name"
-                                            placeholder="System Administrator"
+                                            label={t('setup.adminFullName')}
+                                            placeholder={t('setup.adminFullNamePlaceholder')}
                                             value={setupData.adminFullName}
                                             onChange={(e) => setSetupData({...setupData, adminFullName: e.target.value})}
                                             icon={<UserPlus size={20} />}
                                             required
                                         />
                                         <div className="flex gap-3 mt-6">
-                                            <button type="button" onClick={() => setSetupStep(1)} className="btn btn-ghost btn-lg flex-1 h-14 rounded-xl font-bold">Back</button>
+                                            <button type="button" onClick={() => setSetupStep(1)} className="btn btn-ghost btn-lg flex-1 h-14 rounded-xl font-bold">{t('common.back')}</button>
                                             <button 
                                                 type="submit" 
                                                 className={`btn btn-primary btn-lg flex-[2] h-14 rounded-xl font-bold shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
                                                 disabled={loading}
                                             >
-                                                {loading ? 'Setting up...' : 'Complete Setup'}
+                                                {loading ? t('setup.settingUp') : t('setup.completeSetup')}
                                             </button>
                                         </div>
                                     </>
@@ -190,21 +194,22 @@ const LoginPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-4 md:p-6 transition-colors duration-400">
-             <div className="absolute top-4 right-4 md:top-8 md:right-8">
+             <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-2">
+                <LanguageSwitcher />
                 <ThemeToggle />
             </div>
 
             <div className="w-full max-w-[440px]">
                 <div className="text-center mb-8 md:mb-10">
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight text-primary">KINDEE</h1>
-                    <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs">Management System</p>
+                    <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs font-bold">{t('home.subtitle')}</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-2xl shadow-primary/5 border border-base-300">
                     <div className="card-body p-6 md:p-10">
                         <div className="mb-8">
-                            <h2 className="text-2xl font-bold">Welcome Back</h2>
-                            <p className="text-base-content/60 text-sm mt-1">Please enter your credentials to continue</p>
+                            <h2 className="text-2xl font-bold">{t('auth.welcomeBack')}</h2>
+                            <p className="text-base-content/60 text-sm mt-1">{t('auth.enterCredentials')}</p>
                         </div>
 
                         {error && (
@@ -215,8 +220,8 @@ const LoginPage: React.FC = () => {
 
                         <form onSubmit={handleLogin} className="space-y-5">
                             <InputWithIcon
-                                label="Username"
-                                placeholder="Enter username"
+                                label={t('auth.username')}
+                                placeholder={t('auth.username')}
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 icon={<User size={20} />}
@@ -224,7 +229,7 @@ const LoginPage: React.FC = () => {
                             />
                             <div>
                                 <InputWithIcon
-                                    label="Password"
+                                    label={t('auth.password')}
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
@@ -233,7 +238,7 @@ const LoginPage: React.FC = () => {
                                     required
                                 />
                                 <div className="flex justify-end mt-2">
-                                    <button type="button" onClick={() => navigate('/god-reset')} className="text-xs font-bold text-primary hover:underline">Forgot Password?</button>
+                                    <button type="button" onClick={() => navigate('/god-reset')} className="text-xs font-bold text-primary hover:underline">{t('auth.forgotPassword')}</button>
                                 </div>
                             </div>
                             <div className="form-control mt-8">
@@ -242,7 +247,7 @@ const LoginPage: React.FC = () => {
                                     className={`btn btn-primary btn-lg h-14 rounded-xl text-lg font-bold shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
                                     disabled={loading}
                                 >
-                                    {loading ? 'Signing In...' : 'Sign In'}
+                                    {loading ? t('auth.signingIn') : t('auth.signIn')}
                                 </button>
                             </div>
                         </form>
@@ -251,7 +256,7 @@ const LoginPage: React.FC = () => {
 
                         <div className="text-center">
                             <p className="text-sm text-base-content/60">
-                                Contact your administrator to get an account
+                                {t('auth.contactAdmin')}
                             </p>
                         </div>
                     </div>

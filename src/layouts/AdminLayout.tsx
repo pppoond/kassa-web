@@ -6,8 +6,10 @@ import { useAdminStore } from '../store/useAdminStore';
 import { useAuthStore } from '../store/useAuthStore';
 import ThemeToggle from '../components/common/ThemeToggle';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const AdminLayout = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
     const { branches, selectedBranchId, setSelectedBranch, fetchBranches } = useAdminStore();
@@ -40,7 +42,7 @@ const AdminLayout = () => {
                             KINDEE
                         </div>
                         <div className="text-[10px] uppercase tracking-widest font-bold text-base-content/40 mt-1">
-                            Administration
+                            {t('nav.administration')}
                         </div>
                     </div>
                     {/* Close button on mobile */}
@@ -56,7 +58,7 @@ const AdminLayout = () => {
             <div className="px-4 lg:px-6 mb-6 lg:mb-8 mt-4">
                 <div className="form-control w-full">
                     <label className="label py-1">
-                        <span className="label-text font-bold text-[10px] uppercase opacity-40">Active Branch</span>
+                        <span className="label-text font-bold text-[10px] uppercase opacity-40">{t('nav.activeBranch')}</span>
                     </label>
                     
                     <Listbox value={selectedBranchId ?? undefined} onChange={setSelectedBranch}>
@@ -66,7 +68,7 @@ const AdminLayout = () => {
                                     <MapPin size={16} aria-hidden="true" />
                                 </span>
                                 <span className="block truncate font-bold text-xs uppercase tracking-tight">
-                                    {selectedBranch ? selectedBranch.name : 'Select Branch...'}
+                                    {selectedBranch ? selectedBranch.name : t('nav.selectBranch')}
                                 </span>
                                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                     <ChevronDown size={16} className="text-base-content/30" aria-hidden="true" />
@@ -105,7 +107,7 @@ const AdminLayout = () => {
                                     ))}
                                     {branches.length === 0 && (
                                         <div className="py-4 px-4 text-center text-xs opacity-40 font-bold">
-                                            No branches found
+                                            {t('common.noData')}
                                         </div>
                                     )}
                                 </Listbox.Options>
@@ -121,7 +123,7 @@ const AdminLayout = () => {
                     className="flex items-center gap-3 px-4 py-3 lg:py-3.5 rounded-xl font-medium transition-all duration-200 text-base-content/70 hover:bg-base-300 hover:text-base-content"
                 >
                     <Home size={20} />
-                    Back to Home
+                    {t('common.backToHome')}
                 </Link>
 
                 <div className="divider my-2 opacity-20"></div>
@@ -132,7 +134,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <LayoutDashboard size={20} />
-                    Dashboard
+                    {t('nav.dashboard')}
                 </Link>
                 <Link
                     to="/admin/categories"
@@ -140,7 +142,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <List size={20} />
-                    Categories
+                    {t('nav.categories')}
                 </Link>
                 <Link
                     to="/admin/menu-items"
@@ -148,7 +150,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <Coffee size={20} />
-                    Menu Items
+                    {t('nav.menuItems')}
                 </Link>
                 <Link
                     to="/admin/option-groups"
@@ -156,7 +158,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <Settings2 size={20} />
-                    Option Groups
+                    {t('nav.optionGroups')}
                 </Link>
                 <Link
                     to="/admin/staff"
@@ -164,7 +166,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <Users size={20} />
-                    Staff
+                    {t('nav.staff')}
                 </Link>
                 <Link
                     to="/admin/tables"
@@ -172,7 +174,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <TableProperties size={20} />
-                    Tables
+                    {t('nav.tables')}
                 </Link>
                 <Link
                     to="/admin/branches"
@@ -180,7 +182,7 @@ const AdminLayout = () => {
                         }`}
                 >
                     <Building size={20} />
-                    Branches
+                    {t('nav.branches')}
                 </Link>
             </nav>
 
@@ -190,7 +192,7 @@ const AdminLayout = () => {
                     className="flex items-center gap-3 px-4 py-3 lg:py-3.5 rounded-xl font-medium transition-all duration-200 text-error/70 hover:bg-error/10 hover:text-error w-full"
                 >
                     <LogOut size={20} />
-                    Logout
+                    {t('common.logout')}
                 </button>
                 <div className="bg-base-300/50 rounded-2xl p-3 lg:p-4 flex items-center justify-between border border-base-300/50">
                      <div className="text-[10px] font-bold opacity-40 uppercase tracking-tighter">System v0.1.0</div>

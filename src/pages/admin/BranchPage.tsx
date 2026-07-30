@@ -6,6 +6,7 @@ import apiClient from '../../api/client';
 import { Input, Textarea } from '../../components/common/FormField';
 import { useForm } from 'react-hook-form';
 import type { Branch, ApiResponse } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
     name: string;
@@ -14,6 +15,7 @@ interface FormData {
 }
 
 const BranchPage = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { data: branches = [], isLoading } = useQuery({
         queryKey: ['branches'],
@@ -65,12 +67,12 @@ const BranchPage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Branches</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Manage your store locations</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('branches.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('branches.subtitle')}</p>
                 </div>
                 <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAdd}>
                     <Plus size={20} />
-                    Add Branch
+                    {t('branches.addNew')}
                 </button>
             </div>
 
@@ -82,7 +84,7 @@ const BranchPage = () => {
                 <div className="bg-base-100 rounded-2xl shadow-sm border border-base-200 p-16 text-center">
                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                         <MapPin size={48} strokeWidth={1} />
-                        <p className="text-xl font-medium">No branches yet</p>
+                        <p className="text-xl font-medium">{t('branches.noBranches')}</p>
                     </div>
                 </div>
             ) : (
@@ -98,7 +100,7 @@ const BranchPage = () => {
                                         <div>
                                             <h3 className="font-bold text-lg">{branch.name}</h3>
                                             <div className={`badge badge-xs ${branch.isActive ? 'badge-success' : 'badge-error'}`}>
-                                                {branch.isActive ? 'Active' : 'Inactive'}
+                                                {branch.isActive ? t('common.active') : t('common.inactive')}
                                             </div>
                                         </div>
                                     </div>
@@ -130,21 +132,21 @@ const BranchPage = () => {
                 <div className={`modal-dialog transition-all duration-300 w-full max-w-lg mx-4 md:mx-auto my-4 md:my-10 ${isModalOpen ? 'translate-y-0' : 'translate-y-10'}`}>
                     <div className="modal-content border-0 rounded-3xl shadow-2xl bg-base-100">
                         <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
-                            <h3 className="text-2xl font-bold">{editingBranch ? 'Edit Branch' : 'Add New Branch'}</h3>
+                            <h3 className="text-2xl font-bold">{editingBranch ? t('branches.editBranch') : t('branches.addBranch')}</h3>
                             <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setIsModalOpen(false)}>
                                 <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="p-6 space-y-5">
-                                <Input label="Branch Name" placeholder="e.g. Main Branch, Siam Square" registration={register('name', { required: true })} />
-                                <Textarea label="Address" placeholder="Full address..." rows={3} registration={register('address')} />
-                                <Input label="Phone" placeholder="e.g. 02-xxx-xxxx" registration={register('phone')} />
+                                <Input label={t('branches.name')} placeholder="e.g. Main Branch, Siam Square" registration={register('name', { required: true })} />
+                                <Textarea label={t('branches.address')} placeholder="Full address..." rows={3} registration={register('address')} />
+                                <Input label={t('branches.phone')} placeholder="e.g. 02-xxx-xxxx" registration={register('phone')} />
                             </div>
                             <div className="flex justify-end p-6 border-t border-base-200 gap-3">
-                                <button className="btn btn-ghost" type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                <button className="btn btn-ghost" type="button" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</button>
                                 <button className="btn btn-primary px-8 shadow-lg shadow-primary/20" type="submit">
-                                    {editingBranch ? 'Update' : 'Create'}
+                                    {editingBranch ? t('common.update') : t('common.create')}
                                 </button>
                             </div>
                         </form>

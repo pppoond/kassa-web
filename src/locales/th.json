@@ -3,7 +3,7 @@
     "save": "บันทึก",
     "cancel": "ยกเลิก",
     "create": "สร้าง",
-    "update": "อัพเดท",
+    "update": "อัปเดต",
     "delete": "ลบ",
     "edit": "แก้ไข",
     "close": "ปิด",
@@ -18,8 +18,38 @@
     "name": "ชื่อ",
     "description": "รายละเอียด",
     "back": "กลับ",
+    "next": "ถัดไป",
     "logout": "ออกจากระบบ",
-    "backToHome": "กลับหน้าหลัก"
+    "backToHome": "กลับหน้าหลัก",
+    "yes": "ใช่",
+    "no": "ไม่ใช่",
+    "all": "ทั้งหมด",
+    "filter": "ตัวกรอง",
+    "refresh": "รีเฟรช",
+    "details": "รายละเอียด",
+    "total": "รวม",
+    "price": "ราคา",
+    "quantity": "จำนวน"
+  },
+  "nav": {
+    "dashboard": "แดชบอร์ด",
+    "pos": "ระบบขาย (POS)",
+    "posHome": "หน้าขาย",
+    "posOrders": "รายการออเดอร์",
+    "posTables": "ผังโต๊ะ",
+    "posSettings": "ตั้งค่า",
+    "categories": "หมวดหมู่",
+    "menuItems": "เมนูอาหาร",
+    "optionGroups": "กลุ่มตัวเลือก",
+    "staff": "พนักงาน",
+    "tables": "จัดการโต๊ะ",
+    "branches": "สาขา",
+    "reports": "รายงาน",
+    "kitchen": "ระบบครัว",
+    "backoffice": "ระบบหลังร้าน",
+    "activeBranch": "สาขาที่ใช้งาน",
+    "selectBranch": "เลือกสาขา...",
+    "administration": "ระบบบริหารจัดการ"
   },
   "auth": {
     "login": "เข้าสู่ระบบ",
@@ -30,7 +60,30 @@
     "enterCredentials": "กรุณากรอกข้อมูลเพื่อดำเนินการต่อ",
     "signingIn": "กำลังเข้าสู่ระบบ...",
     "signIn": "เข้าสู่ระบบ",
-    "contactAdmin": "ติดต่อผู้ดูแลระบบเพื่อขอบัญชีผู้ใช้"
+    "contactAdmin": "ติดต่อผู้ดูแลระบบเพื่อขอบัญชีผู้ใช้",
+    "loginFailed": "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบชื่อผู้ใช้และรหัสผ่าน",
+    "enterBoth": "กรุณากรอกทั้งชื่อผู้ใช้และรหัสผ่าน"
+  },
+  "setup": {
+    "title": "ตัวช่วยตั้งค่าระบบครั้งแรก",
+    "step1": "1. ข้อมูลองค์กรและสาขา",
+    "step2": "2. บัญชีผู้ดูแลระบบ",
+    "step1Desc": "ตั้งชื่อองค์กรหลักและสาขาแรกของคุณ",
+    "step2Desc": "สร้างบัญชีผู้ดูแลระบบสูงสุด (Super Admin)",
+    "orgName": "ชื่อองค์กร / บริษัท",
+    "orgNamePlaceholder": "เช่น กลุ่มร้านอาหาร กินดี",
+    "branchName": "ชื่อสาขาแรก",
+    "branchNamePlaceholder": "เช่น สาขาใหญ่ (สุขุมวิท)",
+    "branchAddress": "ที่อยู่สาขา",
+    "branchAddressPlaceholder": "เช่น 123 ถนนสุขุมวิท กรุงเทพฯ",
+    "adminUsername": "ชื่อผู้ใช้ Admin",
+    "adminPassword": "รหัสผ่าน Admin",
+    "adminFullName": "ชื่อ-นามสกุล Admin",
+    "adminFullNamePlaceholder": "เช่น สมชาย ใจดี",
+    "adminEmail": "อีเมล Admin (ไม่บังคับ)",
+    "completeSetup": "เสร็จสิ้นการตั้งค่า",
+    "settingUp": "กำลังตั้งค่าระบบ...",
+    "setupSuccess": "ตั้งค่าระบบสำเร็จ! กรุณาเข้าสู่ระบบด้วยบัญชี Admin ที่สร้างขึ้น"
   },
   "godReset": {
     "title": "God Mode",
@@ -58,7 +111,7 @@
   },
   "pos": {
     "searchMenu": "ค้นหาเมนู...",
-    "allCategories": "ทั้งหมด",
+    "allCategories": "ทุกหมวดหมู่",
     "currentOrder": "ออเดอร์ปัจจุบัน",
     "items": "รายการ",
     "noItems": "ยังไม่มีรายการ",
@@ -72,7 +125,30 @@
     "addToCart": "เพิ่มลงตะกร้า",
     "skip": "ข้าม",
     "orderPlaced": "สั่งอาหารสำเร็จ! รอบที่",
-    "selectTableFirst": "กรุณาเลือกโต๊ะและเพิ่มรายการอาหาร"
+    "selectTableFirst": "กรุณาเลือกโต๊ะและเพิ่มรายการอาหาร",
+    "table": "โต๊ะ",
+    "ordersTitle": "ประวัติออเดอร์",
+    "tablesTitle": "ผังโต๊ะและสถานะ",
+    "selectBranchTitle": "เลือกสาขาปฏิบัติงาน",
+    "settingsTitle": "ตั้งค่าระบบขาย POS",
+    "filterAll": "ออเดอร์ทั้งหมด",
+    "filterPending": "รอชำระเงิน",
+    "filterPaid": "ชำระแล้ว / เสร็จสิ้น",
+    "filterCancelled": "ยกเลิกแล้ว",
+    "emptyOrders": "ไม่พบรายการออเดอร์",
+    "available": "ว่าง",
+    "occupied": "มีลูกค้า",
+    "reserved": "จองแล้ว",
+    "orderRound": "รอบที่",
+    "markPaid": "ชำระเงิน",
+    "cancelOrder": "ยกเลิกออเดอร์",
+    "receipt": "ใบเสร็จ",
+    "customer": "ลูกค้า",
+    "cashier": "แคชเชียร์",
+    "branchInfo": "ข้อมูลสาขา",
+    "printerSettings": "ตั้งค่าเครื่องพิมพ์",
+    "themeMode": "ธีมการแสดงผล",
+    "language": "ภาษา"
   },
   "kitchen": {
     "title": "ระบบจอภาพในครัว",
@@ -97,7 +173,12 @@
     "staff": "พนักงาน",
     "tables": "โต๊ะ",
     "branches": "สาขา",
-    "addNew": "เพิ่มใหม่"
+    "addNew": "เพิ่มใหม่",
+    "totalSales": "ยอดขายรวม",
+    "totalOrders": "จำนวนออเดอร์",
+    "activeTables": "โต๊ะที่ใช้งานอยู่",
+    "totalStaff": "พนักงานทั้งหมด",
+    "overview": "ภาพรวมร้านและเมนูด่วน"
   },
   "categories": {
     "title": "หมวดหมู่",
@@ -106,7 +187,8 @@
     "editCategory": "แก้ไขหมวดหมู่",
     "addCategory": "เพิ่มหมวดหมู่ใหม่",
     "name": "ชื่อหมวดหมู่",
-    "noCategories": "ไม่พบหมวดหมู่"
+    "noCategories": "ไม่พบหมวดหมู่",
+    "displayOrder": "ลำดับแสดง"
   },
   "menuItems": {
     "title": "เมนูอาหาร",
@@ -120,7 +202,9 @@
     "allCategories": "ทุกหมวดหมู่",
     "imageUrl": "รูปภาพ",
     "available": "พร้อมขาย",
-    "noItems": "ไม่พบเมนู"
+    "noItems": "ไม่พบเมนู",
+    "selectCategory": "-- เลือกหมวดหมู่ --",
+    "optionGroups": "กลุ่มตัวเลือกที่เชื่อมโยง"
   },
   "optionGroups": {
     "title": "กลุ่มตัวเลือก",
@@ -171,7 +255,8 @@
     "name": "ชื่อโต๊ะ",
     "generateQr": "สร้าง QR Code",
     "scanToOrder": "สแกนเพื่อสั่งอาหาร",
-    "noTables": "ไม่พบโต๊ะ"
+    "noTables": "ไม่พบโต๊ะ",
+    "qrTitle": "QR Code สำหรับสั่งอาหาร"
   },
   "branches": {
     "title": "สาขา",
@@ -219,6 +304,9 @@
     "placeOrder": "สั่งอาหาร",
     "sending": "กำลังส่ง...",
     "orderSuccess": "สั่งอาหารสำเร็จ! รอบที่",
-    "selectOptions": "เลือกตัวเลือก"
+    "selectOptions": "เลือกตัวเลือก",
+    "menu": "เมนูอาหาร",
+    "welcome": "ยินดีต้อนรับสู่",
+    "table": "โต๊ะ"
   }
 }

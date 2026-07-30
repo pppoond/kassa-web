@@ -11,8 +11,10 @@ import { getBranches } from '../../api/branch';
 import type { StaffMember } from '../../api/staff';
 import type { RoleDto, UserBranchDto } from '../../api/roles';
 import type { Branch } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 const StaffPage = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { data: staffList = [], isLoading } = useQuery<StaffMember[]>({
         queryKey: ['staff'],
@@ -59,7 +61,6 @@ const StaffPage = () => {
         const file = e.target.files?.[0];
         if (!file) return;
         setSelectedFile(file);
-        // Preview local
         setAvatarPreview(URL.createObjectURL(file));
     };
 
@@ -70,7 +71,6 @@ const StaffPage = () => {
         setSuccess('');
 
         try {
-            // Upload avatar ถ้ามี
             let avatarUrl: string | undefined;
             if (selectedFile) {
                 avatarUrl = await uploadFile(selectedFile, 'users');
@@ -92,15 +92,15 @@ const StaffPage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Staff Management</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Add and manage your team members</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('staff.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('staff.subtitle')}</p>
                 </div>
                 <button
                     className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto"
                     onClick={() => { resetForm(); setSuccess(''); setIsModalOpen(true); }}
                 >
                     <Plus size={20} />
-                    Add Staff
+                    {t('staff.addNew')}
                 </button>
             </div>
 
@@ -115,12 +115,12 @@ const StaffPage = () => {
                 <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
-                            <th className="rounded-tl-2xl">Name</th>
-                            <th className="hidden sm:table-cell">Username</th>
-                            <th className="hidden md:table-cell">Email</th>
-                            <th>Status</th>
-                            <th className="hidden lg:table-cell">Joined</th>
-                            <th className="text-right rounded-tr-2xl">Actions</th>
+                            <th className="rounded-tl-2xl">{t('common.name')}</th>
+                            <th className="hidden sm:table-cell">{t('auth.username')}</th>
+                            <th className="hidden md:table-cell">{t('staff.email')}</th>
+                            <th>{t('common.status')}</th>
+                            <th className="hidden lg:table-cell">{t('staff.joined')}</th>
+                            <th className="text-right rounded-tr-2xl">{t('common.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,8 +135,8 @@ const StaffPage = () => {
                                 <td colSpan={6} className="text-center py-16">
                                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                                         <Users size={48} strokeWidth={1} />
-                                        <p className="text-xl font-medium">No staff members yet</p>
-                                        <p className="text-sm">Click "Add Staff" to create the first account</p>
+                                        <p className="text-xl font-medium">{t('staff.noStaff')}</p>
+                                        <p className="text-sm">{t('staff.noStaffDesc')}</p>
                                     </div>
                                 </td>
                             </tr>
@@ -161,7 +161,7 @@ const StaffPage = () => {
                                     <td className="hidden md:table-cell text-base-content/60">{staff.email || '—'}</td>
                                     <td>
                                         <div className={`badge badge-sm ${staff.isActive ? 'badge-success' : 'badge-error'}`}>
-                                            {staff.isActive ? 'Active' : 'Inactive'}
+                                            {staff.isActive ? t('common.active') : t('common.inactive')}
                                         </div>
                                     </td>
                                     <td className="hidden lg:table-cell text-sm text-base-content/50">
@@ -177,7 +177,7 @@ const StaffPage = () => {
                                                     setUserBranches(bp);
                                                 } catch { setUserBranches([]); }
                                             }}
-                                            title="View Info"
+                                            title={t('common.details')}
                                         >
                                             <Eye size={18} />
                                         </button>
@@ -198,7 +198,7 @@ const StaffPage = () => {
                 <div className={`modal-dialog transition-all duration-300 w-full max-w-lg mx-auto my-10 ${isModalOpen ? 'overlay-open:opacity-100 translate-y-0' : 'translate-y-10'}`}>
                     <div className="modal-content border-0 rounded-3xl shadow-2xl relative flex flex-col w-full bg-base-100 outline-none focus:outline-none">
                         <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
-                            <h3 className="modal-title text-2xl font-bold text-base-content">New Staff Account</h3>
+                            <h3 className="modal-title text-2xl font-bold text-base-content">{t('staff.newStaff')}</h3>
                             <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={() => setIsModalOpen(false)}>
                                 <X size={20} />
                             </button>
@@ -235,14 +235,13 @@ const StaffPage = () => {
                                             onClick={() => fileInputRef.current?.click()}
                                         >
                                             <Upload size={14} />
-                                            {selectedFile ? 'Change Photo' : 'Upload Photo'}
+                                            {selectedFile ? t('staff.changePhoto') : t('staff.uploadPhoto')}
                                         </button>
-                                        <p className="text-xs text-base-content/40 mt-1">Optional</p>
                                     </div>
                                 </div>
 
                                 <InputWithIcon
-                                    label="Full Name"
+                                    label={t('staff.fullName')}
                                     placeholder="John Doe"
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
@@ -250,7 +249,7 @@ const StaffPage = () => {
                                     required
                                 />
                                 <InputWithIcon
-                                    label="Email (Optional)"
+                                    label={t('staff.email')}
                                     type="email"
                                     placeholder="john@example.com"
                                     value={email}
@@ -258,7 +257,7 @@ const StaffPage = () => {
                                     icon={<Mail size={20} />}
                                 />
                                 <InputWithIcon
-                                    label="Username"
+                                    label={t('auth.username')}
                                     placeholder="choose_username"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
@@ -266,7 +265,7 @@ const StaffPage = () => {
                                     required
                                 />
                                 <InputWithIcon
-                                    label="Password"
+                                    label={t('auth.password')}
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
@@ -278,13 +277,13 @@ const StaffPage = () => {
                                 {/* Role Selection */}
                                 <div className="form-control">
                                     <label className="label py-1">
-                                        <span className="label-text font-bold text-xs uppercase opacity-50">Role</span>
+                                        <span className="label-text font-bold text-xs uppercase opacity-50">{t('staff.role')}</span>
                                     </label>
                                     <Listbox value={selectedRoleId} onChange={setSelectedRoleId}>
                                         <div className="relative">
                                             <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-3 pl-4 pr-10 text-left transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                                 <span className={`block truncate ${selectedRoleId ? 'font-medium' : 'opacity-50'}`}>
-                                                    {roles.find(r => r.id === selectedRoleId)?.name || '-- Select Role --'}
+                                                    {roles.find(r => r.id === selectedRoleId)?.name || t('staff.selectRole')}
                                                 </span>
                                                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                     <ChevronDown size={16} className="opacity-40" />
@@ -316,14 +315,14 @@ const StaffPage = () => {
 
                             <div className="modal-footer flex items-center justify-end p-6 border-t border-base-200 gap-3">
                                 <button className="btn btn-ghost" type="button" onClick={() => setIsModalOpen(false)}>
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                                 <button
                                     type="submit"
                                     className={`btn btn-primary px-8 shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
                                     disabled={loading}
                                 >
-                                    {loading ? 'Creating...' : 'Create Account'}
+                                    {loading ? t('staff.creating') : t('staff.createAccount')}
                                 </button>
                             </div>
                         </form>
@@ -341,7 +340,7 @@ const StaffPage = () => {
                 <div className={`modal-dialog transition-all duration-300 w-full max-w-md mx-auto my-10 ${viewingStaff ? 'overlay-open:opacity-100 translate-y-0' : 'translate-y-10'}`}>
                     <div className="modal-content border-0 rounded-3xl shadow-2xl relative flex flex-col w-full bg-base-100 outline-none focus:outline-none">
                         <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
-                            <h3 className="modal-title text-2xl font-bold text-base-content">Staff Info</h3>
+                            <h3 className="modal-title text-2xl font-bold text-base-content">{t('staff.staffInfo')}</h3>
                             <button type="button" className="btn btn-sm btn-circle btn-ghost" onClick={() => setViewingStaff(null)}>
                                 <X size={20} />
                             </button>
@@ -366,29 +365,25 @@ const StaffPage = () => {
 
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center py-2 border-b border-base-200">
-                                        <span className="text-sm text-base-content/50">Email</span>
+                                        <span className="text-sm text-base-content/50">{t('staff.email')}</span>
                                         <span className="text-sm font-medium">{viewingStaff.email || '—'}</span>
                                     </div>
                                     <div className="flex justify-between items-center py-2 border-b border-base-200">
-                                        <span className="text-sm text-base-content/50">Status</span>
+                                        <span className="text-sm text-base-content/50">{t('common.status')}</span>
                                         <div className={`badge badge-sm ${viewingStaff.isActive ? 'badge-success' : 'badge-error'}`}>
-                                            {viewingStaff.isActive ? 'Active' : 'Inactive'}
+                                            {viewingStaff.isActive ? t('common.active') : t('common.inactive')}
                                         </div>
                                     </div>
                                     <div className="flex justify-between items-center py-2 border-b border-base-200">
-                                        <span className="text-sm text-base-content/50">Joined</span>
+                                        <span className="text-sm text-base-content/50">{t('staff.joined')}</span>
                                         <span className="text-sm font-medium">{new Date(viewingStaff.createdAt).toLocaleDateString()}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center py-2">
-                                        <span className="text-sm text-base-content/50">ID</span>
-                                        <span className="text-xs font-mono text-base-content/40">{viewingStaff.id}</span>
                                     </div>
                                 </div>
 
                                 {/* Branch Permissions */}
                                 <div className="pt-2">
                                     <h4 className="font-bold text-xs uppercase opacity-50 mb-2 flex items-center gap-1">
-                                        <Shield size={14} /> Branch Access
+                                        <Shield size={14} /> {t('staff.branchAccess')}
                                     </h4>
                                     <div className="space-y-2">
                                         {allBranches.map(branch => {
@@ -413,9 +408,6 @@ const StaffPage = () => {
                                                 </label>
                                             );
                                         })}
-                                        {allBranches.length === 0 && (
-                                            <p className="text-xs text-base-content/40">No branches available</p>
-                                        )}
                                     </div>
                                 </div>
 
@@ -424,7 +416,7 @@ const StaffPage = () => {
                                         <div className="flex-1 flex gap-2">
                                             <input
                                                 type="password"
-                                                placeholder="New password"
+                                                placeholder={t('godReset.newPassword')}
                                                 className="input input-bordered input-sm flex-1"
                                                 value={newStaffPassword}
                                                 onChange={(e) => setNewStaffPassword(e.target.value)}
@@ -444,13 +436,13 @@ const StaffPage = () => {
                                                     }
                                                 }}
                                             >
-                                                Confirm
+                                                {t('common.confirm')}
                                             </button>
                                             <button
                                                 className="btn btn-sm btn-ghost"
                                                 onClick={() => { setResetPasswordFor(null); setNewStaffPassword(''); }}
                                             >
-                                                Cancel
+                                                {t('common.cancel')}
                                             </button>
                                         </div>
                                     ) : (
@@ -459,9 +451,9 @@ const StaffPage = () => {
                                                 className="btn btn-sm btn-warning btn-outline"
                                                 onClick={() => setResetPasswordFor(viewingStaff.username)}
                                             >
-                                                Reset Password
+                                                {t('staff.resetPassword')}
                                             </button>
-                                            <button className="btn btn-ghost btn-sm" onClick={() => setViewingStaff(null)}>Close</button>
+                                            <button className="btn btn-ghost btn-sm" onClick={() => setViewingStaff(null)}>{t('common.close')}</button>
                                         </>
                                     )}
                                 </div>

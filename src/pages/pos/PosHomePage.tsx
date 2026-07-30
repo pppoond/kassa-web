@@ -13,6 +13,7 @@ import { useAdminStore } from '../../store/useAdminStore';
 import type { CategoryMenuDto, MenuItemDto } from '../../types';
 import type { OptionGroup, Option } from '../../types';
 import type { CreateOrderItem } from '../../api/order';
+import { useTranslation } from 'react-i18next';
 
 interface CartItem {
     id: string;
@@ -33,6 +34,7 @@ interface SelectedOption {
 }
 
 const PosHomePage = () => {
+    const { t } = useTranslation();
     const { selectedBranchId } = useAdminStore();
 
     const { data: menu = [] } = useQuery<CategoryMenuDto[]>({
@@ -70,7 +72,7 @@ const PosHomePage = () => {
     }, [searchParams]);
 
     const categories = [
-        { id: 'all', name: 'All' },
+        { id: 'all', name: t('common.all') },
         ...menu.map(c => ({ id: c.categoryId, name: c.categoryName }))
     ];
 
@@ -196,7 +198,7 @@ const PosHomePage = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50" />
                             <input
                                 type="text"
-                                placeholder="Search menu..."
+                                placeholder={`${t('common.search')}...`}
                                 className="input input-bordered w-full pl-10"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -267,7 +269,7 @@ const PosHomePage = () => {
                     <div className="p-4 border-b border-base-300 flex items-center justify-between bg-base-100">
                         <div className="flex items-center gap-3">
                             <ShoppingCart className="w-6 h-6 text-primary" />
-                            <h2 className="text-xl font-bold">Current Order</h2>
+                            <h2 className="text-xl font-bold">{t('cart.title')}</h2>
                         </div>
                         <div className="badge badge-primary badge-lg">{cartItemCount} items</div>
                     </div>
@@ -278,7 +280,7 @@ const PosHomePage = () => {
                             <div className="relative">
                                 <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-2.5 pl-4 pr-10 text-left text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                     <span className={`block truncate ${selectedTableId ? 'font-medium' : 'opacity-50'}`}>
-                                        {tables.find(t => t.id === selectedTableId)?.name || '-- Select Table --'}
+                                        {tables.find(t => t.id === selectedTableId)?.name || t('pos.selectTable')}
                                     </span>
                                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                         <ChevronDown size={14} className="opacity-40" />
@@ -311,8 +313,7 @@ const PosHomePage = () => {
                         {cart.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-base-content/30 gap-4">
                                 <UtensilsCrossed className="w-16 h-16" />
-                                <p className="text-xl font-medium">No items selected</p>
-                                <p className="text-sm">Select products to start an order</p>
+                                <p className="text-xl font-medium">{t('cart.empty')}</p>
                             </div>
                         ) : (
                             cart.map((item) => (
@@ -351,7 +352,7 @@ const PosHomePage = () => {
                     <div className="p-4 bg-base-100 border-t border-base-300">
                         <div className="space-y-1 mb-4 text-sm">
                             <div className="flex justify-between text-base-content/70">
-                                <span>Subtotal</span>
+                                <span>{t('cart.subtotal')}</span>
                                 <span>฿{subtotal.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-base-content/70">
@@ -359,18 +360,18 @@ const PosHomePage = () => {
                                 <span>฿{tax.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-2xl font-bold text-primary pt-2 border-t border-base-300">
-                                <span>Total</span>
+                                <span>{t('cart.total')}</span>
                                 <span>฿{total.toFixed(2)}</span>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
                             <button className="btn btn-outline btn-lg h-14" onClick={() => setCart([])} disabled={cart.length === 0}>
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button className="btn btn-primary btn-lg h-14 gap-2" onClick={handlePayNow} disabled={cart.length === 0}>
                                 <CreditCard className="w-5 h-5" />
-                                Pay
+                                {t('customer.placeOrder')}
                             </button>
                         </div>
                     </div>
@@ -385,7 +386,7 @@ const PosHomePage = () => {
                             <div className="flex items-center justify-between p-4 md:p-6 border-b border-base-200">
                                 <div>
                                     <h3 className="text-lg md:text-xl font-bold">{optionModal.item.name}</h3>
-                                    <p className="text-sm text-base-content/50">Select options</p>
+                                    <p className="text-sm text-base-content/50">{t('customer.selectOptions')}</p>
                                 </div>
                                 <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setOptionModal(null)}>
                                     <X size={20} />
@@ -422,9 +423,9 @@ const PosHomePage = () => {
                                 ))}
                             </div>
                             <div className="flex justify-end p-4 md:p-6 border-t border-base-200 gap-3">
-                                <button className="btn btn-ghost" onClick={() => setOptionModal(null)}>Skip</button>
+                                <button className="btn btn-ghost" onClick={() => setOptionModal(null)}>{t('common.cancel')}</button>
                                 <button className="btn btn-primary px-8" onClick={handleConfirmOptions}>
-                                    Add to Cart
+                                    {t('customer.addToCart')}
                                 </button>
                             </div>
                         </div>
@@ -441,7 +442,7 @@ const PosHomePage = () => {
                         <div className="p-4 border-b border-base-200 flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <ShoppingCart className="w-5 h-5 text-primary" />
-                                <h3 className="text-lg font-bold">Current Order</h3>
+                                <h3 className="text-lg font-bold">{t('cart.title')}</h3>
                                 <div className="badge badge-primary badge-sm">{cartItemCount}</div>
                             </div>
                             <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setShowMobileCart(false)}>
@@ -455,7 +456,7 @@ const PosHomePage = () => {
                                 <div className="relative">
                                     <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-2.5 pl-4 pr-10 text-left text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                         <span className={`block truncate ${selectedTableId ? 'font-medium' : 'opacity-50'}`}>
-                                            {tables.find(t => t.id === selectedTableId)?.name || '-- Select Table --'}
+                                            {tables.find(t => t.id === selectedTableId)?.name || t('pos.selectTable')}
                                         </span>
                                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                             <ChevronDown size={14} className="opacity-40" />
@@ -488,7 +489,7 @@ const PosHomePage = () => {
                             {cart.length === 0 ? (
                                 <div className="h-full flex flex-col items-center justify-center text-base-content/30 gap-4 py-8">
                                     <UtensilsCrossed className="w-12 h-12" />
-                                    <p className="text-lg font-medium">No items selected</p>
+                                    <p className="text-lg font-medium">{t('cart.empty')}</p>
                                 </div>
                             ) : (
                                 cart.map((item) => (
@@ -526,16 +527,16 @@ const PosHomePage = () => {
                         {/* Mobile Cart Footer */}
                         <div className="p-4 bg-base-100 border-t border-base-300">
                             <div className="flex justify-between text-lg font-bold text-primary mb-3">
-                                <span>Total</span>
+                                <span>{t('cart.total')}</span>
                                 <span>฿{total.toFixed(2)}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <button className="btn btn-outline" onClick={() => setCart([])} disabled={cart.length === 0}>
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                                 <button className="btn btn-primary gap-2" onClick={() => { handlePayNow(); setShowMobileCart(false); }} disabled={cart.length === 0}>
                                     <CreditCard className="w-4 h-4" />
-                                    Pay
+                                    {t('customer.placeOrder')}
                                 </button>
                             </div>
                         </div>

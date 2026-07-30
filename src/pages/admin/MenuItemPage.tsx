@@ -5,8 +5,10 @@ import { Listbox, Transition } from '@headlessui/react';
 import MenuItemForm from '../../components/admin/MenuItemForm';
 import { toggleMenuItemActive } from '../../api/menuItem';
 import type { MenuItem } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 const MenuItemPage = () => {
+    const { t } = useTranslation();
     const { 
         menuItems, 
         categories, 
@@ -32,8 +34,6 @@ const MenuItemPage = () => {
             fetchCategories(selectedBranchId);
         }
     }, [selectedBranchId, fetchCategories]);
-
-    const getCategoryName = (id: string) => categories.find(c => c.id === id)?.name || 'Unknown';
 
     const handleAddClick = () => {
         setEditingItem(null);
@@ -66,12 +66,12 @@ const MenuItemPage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Menu Items</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Manage your product list and pricing</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('menuItems.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('menuItems.subtitle')}</p>
                 </div>
                 <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
-                    Add New Item
+                    {t('menuItems.addNew')}
                 </button>
             </div>
 
@@ -82,7 +82,7 @@ const MenuItemPage = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
                         <input
                             type="text"
-                            placeholder="Search by item name..."
+                            placeholder={`${t('common.search')}...`}
                             className="input input-bordered pl-10 w-full"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -96,7 +96,7 @@ const MenuItemPage = () => {
                             <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-3 pl-4 pr-10 text-left transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
                                 <span className="flex items-center gap-2 font-medium">
                                     <Filter size={14} className="opacity-50" />
-                                    {selectedCategory === 'all' ? 'All Categories' : categories.find(c => c.id === selectedCategory)?.name || 'Select'}
+                                    {selectedCategory === 'all' ? t('menuItems.allCategories') : categories.find(c => c.id === selectedCategory)?.name || t('menuItems.selectCategory')}
                                 </span>
                                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                     <ChevronDown size={16} className="opacity-40" />
@@ -110,7 +110,7 @@ const MenuItemPage = () => {
                                     >
                                         {({ selected }) => (
                                             <>
-                                                <span className={`block truncate ${selected ? 'font-bold' : ''}`}>All Categories</span>
+                                                <span className={`block truncate ${selected ? 'font-bold' : ''}`}>{t('menuItems.allCategories')}</span>
                                                 {selected && <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary"><Check size={16} /></span>}
                                             </>
                                         )}
@@ -141,11 +141,11 @@ const MenuItemPage = () => {
                 <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
-                            <th className="rounded-tl-2xl">Product</th>
-                            <th className="hidden sm:table-cell">Category</th>
-                            <th>Price</th>
-                            <th className="hidden md:table-cell">Status</th>
-                            <th className="text-right rounded-tr-2xl">Actions</th>
+                            <th className="rounded-tl-2xl">{t('menuItems.name')}</th>
+                            <th className="hidden sm:table-cell">{t('menuItems.category')}</th>
+                            <th>{t('menuItems.price')}</th>
+                            <th className="hidden md:table-cell">{t('common.status')}</th>
+                            <th className="text-right rounded-tr-2xl">{t('common.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,7 +171,7 @@ const MenuItemPage = () => {
                                     </div>
                                 </td>
                                 <td className="hidden sm:table-cell">
-                                    <span className="badge badge-outline badge-sm md:badge-md py-2 md:py-3">{item.categoryName || 'Unknown'}</span>
+                                    <span className="badge badge-outline badge-sm md:badge-md py-2 md:py-3">{item.categoryName || '-'}</span>
                                 </td>
                                 <td className="font-bold text-sm md:text-lg text-primary">
                                     ฿{item.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -179,7 +179,7 @@ const MenuItemPage = () => {
                                 <td className="hidden md:table-cell">
                                     <div className={`badge ${item.isAvailable ? 'badge-success' : 'badge-error'} badge-sm gap-1.5`}>
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.isAvailable ? 'bg-success-content' : 'bg-error-content'}`} />
-                                        {item.isAvailable ? 'Available' : 'Out of Stock'}
+                                        {item.isAvailable ? t('common.active') : t('common.inactive')}
                                     </div>
                                 </td>
                                 <td className="text-right">
@@ -187,21 +187,21 @@ const MenuItemPage = () => {
                                         <button
                                             className={`btn btn-sm btn-circle btn-ghost ${item.isAvailable ? 'hover:bg-warning/10 hover:text-warning' : 'hover:bg-success/10 hover:text-success'}`}
                                             onClick={async () => { await toggleMenuItemActive(item.id); fetchMenuItems(); }}
-                                            title={item.isAvailable ? 'Deactivate' : 'Activate'}
+                                            title={item.isAvailable ? t('common.inactive') : t('common.active')}
                                         >
                                             {item.isAvailable ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                                         </button>
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-primary/10 hover:text-primary"
                                             onClick={() => handleEditClick(item)}
-                                            title="Edit Item"
+                                            title={t('common.edit')}
                                         >
                                             <Edit size={18} />
                                         </button>
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-error/10 hover:text-error"
                                             onClick={() => confirm('Are you sure you want to delete this item?') && deleteMenuItem(item.id)}
-                                            title="Delete Item"
+                                            title={t('common.delete')}
                                         >
                                             <Trash2 size={18} />
                                         </button>
@@ -214,7 +214,7 @@ const MenuItemPage = () => {
                                 <td colSpan={5} className="text-center py-16">
                                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                                         <Search size={48} strokeWidth={1} />
-                                        <p className="text-xl font-medium">No items found matching your search</p>
+                                        <p className="text-xl font-medium">{t('menuItems.noItems')}</p>
                                     </div>
                                 </td>
                             </tr>

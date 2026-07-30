@@ -5,6 +5,7 @@ import { useAdminStore } from '../../store/useAdminStore';
 import { X, Upload, ImageIcon } from 'lucide-react';
 import { Input, Textarea, SelectListbox, Toggle } from '../common/FormField';
 import { uploadFile } from '../../api/upload';
+import { useTranslation } from 'react-i18next';
 
 interface MenuItemFormProps {
     initialData?: MenuItem | null;
@@ -23,6 +24,7 @@ interface FormData {
 }
 
 const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormProps) => {
+    const { t } = useTranslation();
     const { register, handleSubmit, reset, setValue, control } = useForm<FormData>({
         defaultValues: {
             name: '',
@@ -116,7 +118,7 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                     {/* Header */}
                     <div className="modal-header flex items-center justify-between p-6 border-b border-base-200 bg-base-200/30 rounded-t-3xl">
                         <h3 className="modal-title text-2xl font-bold text-base-content">
-                            {initialData ? 'Edit Menu Item' : 'Add New Item'}
+                            {initialData ? t('menuItems.editItem') : t('menuItems.addItem')}
                         </h3>
                         <button
                             type="button"
@@ -132,8 +134,8 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                         <div className="modal-body p-6 space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <Input
-                                    label="Name"
-                                    placeholder="Item name"
+                                    label={t('menuItems.name')}
+                                    placeholder={t('menuItems.name')}
                                     registration={register('name', { required: true })}
                                 />
                                 <Controller
@@ -142,8 +144,8 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <SelectListbox
-                                            label="Category"
-                                            placeholder="Select Category"
+                                            label={t('menuItems.category')}
+                                            placeholder={t('menuItems.selectCategory')}
                                             options={categoryOptions}
                                             value={field.value || ''}
                                             onChange={field.onChange}
@@ -151,21 +153,21 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                                     )}
                                 />
                                 <Input
-                                    label="Price (฿)"
+                                    label={t('menuItems.price')}
                                     type="number"
                                     step="0.01"
                                     placeholder="0.00"
                                     registration={register('price', { required: true, min: 0 })}
                                 />
                                 <div className="form-control justify-end pb-2">
-                                    <Toggle label="Available" color="primary" registration={register('isAvailable')} />
+                                    <Toggle label={t('menuItems.available')} color="primary" registration={register('isAvailable')} />
                                 </div>
                             </div>
 
                             {/* Image Upload */}
                             <div className="form-control">
                                 <label className="label py-1">
-                                    <span className="label-text font-bold text-xs uppercase opacity-50">Image</span>
+                                    <span className="label-text font-bold text-xs uppercase opacity-50">{t('menuItems.imageUrl')}</span>
                                 </label>
                                 <div className="flex items-start gap-4">
                                     {/* Preview */}
@@ -192,7 +194,7 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                                             disabled={uploading}
                                         >
                                             {!uploading && <Upload size={16} />}
-                                            {uploading ? 'Uploading...' : 'Choose Image'}
+                                            {uploading ? t('common.loading') : t('staff.uploadPhoto')}
                                         </button>
                                         <p className="text-xs text-base-content/40">
                                             JPEG, PNG, WebP, GIF — max 5MB
@@ -207,8 +209,8 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                             </div>
 
                             <Textarea
-                                label="Description"
-                                placeholder="Item description..."
+                                label={t('common.description')}
+                                placeholder={t('common.description')}
                                 rows={3}
                                 registration={register('description')}
                             />
@@ -221,14 +223,14 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                                 type="button"
                                 onClick={onClose}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 className="btn btn-primary px-8 shadow-lg shadow-primary/20"
                                 type="submit"
                                 disabled={uploading}
                             >
-                                {initialData ? 'Update Item' : 'Create Item'}
+                                {initialData ? t('common.update') : t('common.create')}
                             </button>
                         </div>
                     </form>

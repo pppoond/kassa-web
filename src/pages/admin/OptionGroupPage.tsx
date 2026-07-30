@@ -4,8 +4,10 @@ import OptionGroupForm from '../../components/admin/OptionGroupForm';
 import OptionList from '../../components/admin/OptionList';
 import { useOptionGroups, useCreateOptionGroup, useUpdateOptionGroup } from '../../hooks/useOptionGroups';
 import type { OptionGroup, CreateOptionGroupRequest, UpdateOptionGroupRequest } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 const OptionGroupPage = () => {
+    const { t } = useTranslation();
     const { data: optionGroups = [], isLoading } = useOptionGroups();
     const createMutation = useCreateOptionGroup();
     const updateMutation = useUpdateOptionGroup();
@@ -49,12 +51,12 @@ const OptionGroupPage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Option Groups</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Manage customization options for your menu items</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('optionGroups.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('optionGroups.subtitle')}</p>
                 </div>
                 <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
-                    Add Option Group
+                    {t('optionGroups.addNew')}
                 </button>
             </div>
 
@@ -65,7 +67,7 @@ const OptionGroupPage = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
                         <input
                             type="text"
-                            placeholder="Search option groups..."
+                            placeholder={`${t('common.search')}...`}
                             className="input input-bordered pl-10 w-full"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -83,8 +85,7 @@ const OptionGroupPage = () => {
                 <div className="bg-base-100 rounded-2xl shadow-sm border border-base-200 p-16 text-center">
                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                         <Settings2 size={48} strokeWidth={1} />
-                        <p className="text-xl font-medium">No option groups found</p>
-                        <p className="text-sm">Create one to start adding customization options</p>
+                        <p className="text-xl font-medium">{t('optionGroups.noGroups')}</p>
                     </div>
                 </div>
             ) : (
@@ -111,25 +112,25 @@ const OptionGroupPage = () => {
                                     <div className="flex flex-wrap items-center gap-2 md:gap-3">
                                         <h3 className="font-bold text-base md:text-lg truncate">{group.name}</h3>
                                         <div className={`badge badge-xs md:badge-sm ${group.isActive ? 'badge-success' : 'badge-error'}`}>
-                                            {group.isActive ? 'Active' : 'Inactive'}
+                                            {group.isActive ? t('common.active') : t('common.inactive')}
                                         </div>
                                         {group.isRequired && (
-                                            <div className="badge badge-xs md:badge-sm badge-warning">Required</div>
+                                            <div className="badge badge-xs md:badge-sm badge-warning">{t('optionGroups.required')}</div>
                                         )}
                                     </div>
                                     <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-1 text-xs md:text-sm text-base-content/50">
                                         {group.description && (
                                             <span className="truncate max-w-[150px] md:max-w-none">{group.description}</span>
                                         )}
-                                        <span>Select {group.minSelections}–{group.maxSelections}</span>
-                                        <span>{group.options.length} option{group.options.length !== 1 ? 's' : ''}</span>
+                                        <span>{t('optionGroups.minSelections')}: {group.minSelections} - {t('optionGroups.maxSelections')}: {group.maxSelections}</span>
+                                        <span>{group.options.length} {t('optionGroups.options')}</span>
                                     </div>
                                 </div>
 
                                 <button
                                     className="btn btn-sm btn-circle btn-ghost hover:bg-primary/10 hover:text-primary"
                                     onClick={() => handleEditClick(group)}
-                                    title="Edit Option Group"
+                                    title={t('common.edit')}
                                 >
                                     <Edit size={18} />
                                 </button>

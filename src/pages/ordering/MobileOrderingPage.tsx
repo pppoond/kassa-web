@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { ShoppingCart, Plus, Minus, Trash2, Send, UtensilsCrossed, X, Check } from 'lucide-react';
 import { getCustomerInfo, getCustomerMenu, getCustomerItemOptions, placeCustomerOrder } from '../../api/customer';
 import type { CustomerInfo, CustomerCategory, CustomerMenuItem, CustomerOptionGroup, CustomerOption, CustomerOrderItem } from '../../api/customer';
+import LanguageSwitcher from '../../components/common/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 interface CartItem {
     id: string;
@@ -16,6 +18,7 @@ interface CartItem {
 }
 
 const MobileOrderingPage = () => {
+    const { t } = useTranslation();
     const { orderId: token } = useParams<{ orderId: string }>();
     const [info, setInfo] = useState<CustomerInfo | null>(null);
     const [menu, setMenu] = useState<CustomerCategory[]>([]);
@@ -152,6 +155,7 @@ const MobileOrderingPage = () => {
                         <h1 className="text-lg font-bold">KINDEE</h1>
                         <p className="text-xs opacity-80">{info?.tableName} ({info?.tableCode})</p>
                     </div>
+                    <LanguageSwitcher />
                 </div>
             </header>
 
@@ -213,7 +217,7 @@ const MobileOrderingPage = () => {
                     <div className="flex-1 bg-black/50" onClick={() => setShowCart(false)}></div>
                     <div className="bg-base-100 rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col">
                         <div className="p-4 border-b border-base-200 flex items-center justify-between">
-                            <h3 className="text-lg font-bold">Your Order</h3>
+                            <h3 className="text-lg font-bold">{t('cart.title')}</h3>
                             <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setShowCart(false)}>
                                 <X size={20} />
                             </button>
@@ -242,7 +246,7 @@ const MobileOrderingPage = () => {
                         </div>
                         <div className="p-4 border-t border-base-200">
                             <div className="flex justify-between mb-3 text-lg font-bold">
-                                <span>Total</span>
+                                <span>{t('cart.total')}</span>
                                 <span className="text-primary">฿{total.toFixed(2)}</span>
                             </div>
                             <button
@@ -251,7 +255,7 @@ const MobileOrderingPage = () => {
                                 className={`btn btn-primary btn-lg w-full rounded-xl gap-2 ${loading ? 'loading' : ''}`}
                             >
                                 {!loading && <Send size={20} />}
-                                {loading ? 'Sending...' : 'Place Order'}
+                                {loading ? t('common.loading') : t('customer.placeOrder')}
                             </button>
                         </div>
                     </div>
@@ -265,7 +269,7 @@ const MobileOrderingPage = () => {
                     <div className="absolute bottom-0 left-0 right-0 bg-base-100 rounded-t-3xl shadow-2xl max-h-[70vh] flex flex-col">
                         <div className="p-4 border-b border-base-200">
                             <h3 className="text-lg font-bold">{optionModal.item.name}</h3>
-                            <p className="text-sm text-base-content/50">Select options</p>
+                            <p className="text-sm text-base-content/50">{t('customer.selectOptions')}</p>
                         </div>
                         <div className="flex-1 overflow-y-auto p-4 space-y-4">
                             {optionModal.groups.map(group => (
@@ -292,8 +296,8 @@ const MobileOrderingPage = () => {
                             ))}
                         </div>
                         <div className="p-4 border-t border-base-200 flex gap-3">
-                            <button className="btn btn-ghost flex-1" onClick={() => setOptionModal(null)}>Skip</button>
-                            <button className="btn btn-primary flex-1" onClick={handleConfirmOptions}>Add to Cart</button>
+                            <button className="btn btn-ghost flex-1" onClick={() => setOptionModal(null)}>{t('common.cancel')}</button>
+                            <button className="btn btn-primary flex-1" onClick={handleConfirmOptions}>{t('customer.addToCart')}</button>
                         </div>
                     </div>
                 </div>

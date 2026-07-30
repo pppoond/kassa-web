@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Lock, User, ArrowLeft, KeyRound } from 'lucide-react';
 import ThemeToggle from '../../components/common/ThemeToggle';
+import LanguageSwitcher from '../../components/common/LanguageSwitcher';
 import { InputWithIcon } from '../../components/common/FormField';
 import { godVerify, godResetPassword } from '../../api/god';
+import { useTranslation } from 'react-i18next';
 
 const GodResetPage = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [step, setStep] = useState<'verify' | 'reset'>('verify');
     const [godPassword, setGodPassword] = useState('');
@@ -27,7 +30,7 @@ const GodResetPage = () => {
             setToken(t);
             setStep('reset');
         } catch {
-            setError('Invalid god password');
+            setError(t('godReset.invalidPassword'));
         } finally {
             setLoading(false);
         }
@@ -36,7 +39,7 @@ const GodResetPage = () => {
     const handleReset = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            setError('Passwords do not match');
+            setError(t('godReset.passwordMismatch'));
             return;
         }
         setLoading(true);
@@ -44,7 +47,7 @@ const GodResetPage = () => {
 
         try {
             await godResetPassword({ token, username, newPassword, confirmPassword });
-            setSuccess('Password reset successfully! Redirecting to login...');
+            setSuccess(t('godReset.success'));
             setTimeout(() => navigate('/login'), 2000);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Reset failed');
@@ -60,7 +63,8 @@ const GodResetPage = () => {
                     <ArrowLeft size={20} />
                 </button>
             </div>
-            <div className="absolute top-4 right-4 md:top-8 md:right-8">
+            <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-2">
+                <LanguageSwitcher />
                 <ThemeToggle />
             </div>
 
@@ -69,8 +73,8 @@ const GodResetPage = () => {
                     <div className="inline-flex p-3 md:p-4 rounded-2xl bg-warning/10 text-warning mb-4">
                         <Shield size={32} className="md:w-10 md:h-10" />
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-black tracking-tight">God Mode</h1>
-                    <p className="text-base-content/50 mt-2 text-sm">Emergency password reset</p>
+                    <h1 className="text-2xl md:text-3xl font-black tracking-tight">{t('godReset.title')}</h1>
+                    <p className="text-base-content/50 mt-2 text-sm">{t('godReset.subtitle')}</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-2xl border border-base-300">
@@ -89,10 +93,10 @@ const GodResetPage = () => {
                         {step === 'verify' ? (
                             <form onSubmit={handleVerify} className="space-y-5">
                                 <p className="text-sm text-base-content/60 mb-4">
-                                    Enter the god password from your server environment to proceed.
+                                    {t('godReset.enterGodPassword')}
                                 </p>
                                 <InputWithIcon
-                                    label="God Password"
+                                    label={t('godReset.godPassword')}
                                     type="password"
                                     placeholder="••••••••"
                                     value={godPassword}
@@ -105,14 +109,14 @@ const GodResetPage = () => {
                                     className={`btn btn-warning btn-lg w-full h-14 rounded-xl font-bold ${loading ? 'loading' : ''}`}
                                     disabled={loading}
                                 >
-                                    {loading ? 'Verifying...' : 'Verify'}
+                                    {loading ? t('godReset.verifying') : t('godReset.verify')}
                                 </button>
                             </form>
                         ) : (
                             <form onSubmit={handleReset} className="space-y-5">
-                                <div className="badge badge-success badge-sm gap-1 mb-2">Verified — token expires in 5 min</div>
+                                <div className="badge badge-success badge-sm gap-1 mb-2">{t('godReset.verified')}</div>
                                 <InputWithIcon
-                                    label="Username"
+                                    label={t('auth.username')}
                                     placeholder="admin"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
@@ -120,7 +124,7 @@ const GodResetPage = () => {
                                     required
                                 />
                                 <InputWithIcon
-                                    label="New Password"
+                                    label={t('godReset.newPassword')}
                                     type="password"
                                     placeholder="••••••••"
                                     value={newPassword}
@@ -129,7 +133,7 @@ const GodResetPage = () => {
                                     required
                                 />
                                 <InputWithIcon
-                                    label="Confirm Password"
+                                    label={t('godReset.confirmPassword')}
                                     type="password"
                                     placeholder="••••••••"
                                     value={confirmPassword}
@@ -142,7 +146,7 @@ const GodResetPage = () => {
                                     className={`btn btn-primary btn-lg w-full h-14 rounded-xl font-bold shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
                                     disabled={loading}
                                 >
-                                    {loading ? 'Resetting...' : 'Reset Password'}
+                                    {loading ? t('godReset.resetting') : t('godReset.resetPassword')}
                                 </button>
                             </form>
                         )}

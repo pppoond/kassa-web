@@ -8,6 +8,7 @@ import { Input } from '../../components/common/FormField';
 import { useForm } from 'react-hook-form';
 import { useAdminStore } from '../../store/useAdminStore';
 import type { Table } from '../../api/table';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
     code: string;
@@ -15,6 +16,7 @@ interface FormData {
 }
 
 const TablePage = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { selectedBranchId } = useAdminStore();
     const { data: tables = [], isLoading } = useQuery({
@@ -86,12 +88,12 @@ const TablePage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Tables</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Manage restaurant tables for this branch</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('tables.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('tables.subtitle')}</p>
                 </div>
                 <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAdd}>
                     <Plus size={20} />
-                    Add Table
+                    {t('tables.addNew')}
                 </button>
             </div>
 
@@ -101,7 +103,7 @@ const TablePage = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
                         <input
                             type="text"
-                            placeholder="Search by name or code..."
+                            placeholder={`${t('common.search')}...`}
                             className="input input-bordered pl-10 w-full"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -119,8 +121,7 @@ const TablePage = () => {
                 <div className="bg-base-100 rounded-2xl shadow-sm border border-base-200 p-16 text-center">
                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                         <TableProperties size={48} strokeWidth={1} />
-                        <p className="text-xl font-medium">No tables found</p>
-                        <p className="text-sm">Add tables for your branch</p>
+                        <p className="text-xl font-medium">{t('tables.noTables')}</p>
                     </div>
                 </div>
             ) : (
@@ -136,27 +137,27 @@ const TablePage = () => {
                                 </div>
                                 <h3 className="font-bold mt-2">{table.name}</h3>
                                 <div className={`badge badge-xs ${table.isActive ? 'badge-success' : 'badge-error'}`}>
-                                    {table.isActive ? 'Active' : 'Inactive'}
+                                    {table.isActive ? t('common.active') : t('common.inactive')}
                                 </div>
                                 <div className="flex gap-1 mt-2">
                                     <button
                                         className={`btn btn-xs btn-ghost ${table.isActive ? 'hover:text-warning' : 'hover:text-success'}`}
                                         onClick={() => handleToggle(table.id)}
-                                        title={table.isActive ? 'Deactivate' : 'Activate'}
+                                        title={table.isActive ? t('common.inactive') : t('common.active')}
                                     >
                                         {table.isActive ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
                                     </button>
                                     <button
                                         className="btn btn-xs btn-ghost hover:text-primary"
                                         onClick={() => handleEdit(table)}
-                                        title="Edit"
+                                        title={t('common.edit')}
                                     >
                                         <Edit size={16} />
                                     </button>
                                     <button
                                         className="btn btn-xs btn-ghost hover:text-secondary"
                                         onClick={() => handleGenerateQr(table)}
-                                        title="Generate QR"
+                                        title={t('tables.generateQr')}
                                     >
                                         <QrCode size={16} />
                                     </button>
@@ -176,20 +177,20 @@ const TablePage = () => {
                 <div className={`modal-dialog transition-all duration-300 w-full max-w-md mx-4 md:mx-auto my-4 md:my-10 ${isModalOpen ? 'translate-y-0' : 'translate-y-10'}`}>
                     <div className="modal-content border-0 rounded-3xl shadow-2xl bg-base-100">
                         <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
-                            <h3 className="text-2xl font-bold">{editingTable ? 'Edit Table' : 'Add New Table'}</h3>
+                            <h3 className="text-2xl font-bold">{editingTable ? t('tables.editTable') : t('tables.addTable')}</h3>
                             <button className="btn btn-sm btn-circle btn-ghost" onClick={() => setIsModalOpen(false)}>
                                 <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="p-6 space-y-5">
-                                <Input label="Code" placeholder="e.g. A1, B2" registration={register('code', { required: true })} />
-                                <Input label="Name" placeholder="e.g. Table A1, VIP Room" registration={register('name', { required: true })} />
+                                <Input label={t('tables.code')} placeholder="e.g. A1, B2" registration={register('code', { required: true })} />
+                                <Input label={t('tables.name')} placeholder="e.g. Table A1, VIP Room" registration={register('name', { required: true })} />
                             </div>
                             <div className="flex justify-end p-6 border-t border-base-200 gap-3">
-                                <button className="btn btn-ghost" type="button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                <button className="btn btn-ghost" type="button" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</button>
                                 <button className="btn btn-primary px-8 shadow-lg shadow-primary/20" type="submit">
-                                    {editingTable ? 'Update' : 'Create'}
+                                    {editingTable ? t('common.update') : t('common.create')}
                                 </button>
                             </div>
                         </form>
@@ -204,12 +205,12 @@ const TablePage = () => {
                     <div className="modal-dialog w-full max-w-sm mx-auto my-10">
                         <div className="modal-content border-0 rounded-3xl shadow-2xl bg-base-100 p-8 text-center">
                             <h3 className="text-xl font-bold mb-2">{qrData.tableName}</h3>
-                            <p className="text-sm text-base-content/50 mb-6">Scan to order</p>
+                            <p className="text-sm text-base-content/50 mb-6">{t('tables.scanToOrder')}</p>
                             <div className="flex justify-center mb-6">
                                 <QRCodeSVG value={qrData.token} size={240} />
                             </div>
                             <p className="text-xs text-base-content/40 mb-4 break-all">{qrData.token}</p>
-                            <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>Close</button>
+                            <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>{t('common.close')}</button>
                         </div>
                     </div>
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]" onClick={() => setQrData(null)}></div>

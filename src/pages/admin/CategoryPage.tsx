@@ -4,8 +4,10 @@ import { Trash2, Edit, Plus, Search, Tag, ToggleLeft, ToggleRight } from 'lucide
 import CategoryForm from '../../components/admin/CategoryForm';
 import { toggleCategoryActive } from '../../api/category';
 import type { Category } from '../../types';
+import { useTranslation } from 'react-i18next';
 
 const CategoryPage = () => {
+    const { t } = useTranslation();
     const { 
         categories, 
         selectedBranchId, 
@@ -62,12 +64,12 @@ const CategoryPage = () => {
         <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold">Categories</h1>
-                    <p className="text-base-content/60 text-sm md:text-base">Organize your menu items into logical groups</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">{t('categories.title')}</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">{t('categories.subtitle')}</p>
                 </div>
                 <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
-                    Add New Category
+                    {t('categories.addNew')}
                 </button>
             </div>
 
@@ -78,7 +80,7 @@ const CategoryPage = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" size={18} />
                         <input
                             type="text"
-                            placeholder="Search by category name or description..."
+                            placeholder={`${t('common.search')}...`}
                             className="input input-bordered pl-10 w-full"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -92,10 +94,10 @@ const CategoryPage = () => {
                 <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
-                            <th className="rounded-tl-2xl">Category Name</th>
-                            <th className="hidden sm:table-cell">Description</th>
-                            <th>Status</th>
-                            <th className="text-right rounded-tr-2xl">Actions</th>
+                            <th className="rounded-tl-2xl">{t('categories.name')}</th>
+                            <th className="hidden sm:table-cell">{t('common.description')}</th>
+                            <th>{t('common.status')}</th>
+                            <th className="text-right rounded-tr-2xl">{t('common.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,11 +112,11 @@ const CategoryPage = () => {
                                     </div>
                                 </td>
                                 <td className="hidden sm:table-cell text-base-content/70 italic">
-                                    {category.description || 'No description'}
+                                    {category.description || '-'}
                                 </td>
                                 <td>
                                     <div className={`badge badge-sm ${category.isActive ? 'badge-success' : 'badge-error'}`}>
-                                        {category.isActive ? 'Active' : 'Inactive'}
+                                        {category.isActive ? t('common.active') : t('common.inactive')}
                                     </div>
                                 </td>
                                 <td className="text-right">
@@ -122,21 +124,21 @@ const CategoryPage = () => {
                                         <button
                                             className={`btn btn-sm btn-circle btn-ghost ${category.isActive ? 'hover:bg-warning/10 hover:text-warning' : 'hover:bg-success/10 hover:text-success'}`}
                                             onClick={() => handleToggleActive(category.id)}
-                                            title={category.isActive ? 'Deactivate' : 'Activate'}
+                                            title={category.isActive ? t('common.inactive') : t('common.active')}
                                         >
                                             {category.isActive ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                                         </button>
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-primary/10 hover:text-primary"
                                             onClick={() => handleEditClick(category)}
-                                            title="Edit Category"
+                                            title={t('common.edit')}
                                         >
                                             <Edit size={18} />
                                         </button>
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-error/10 hover:text-error"
                                             onClick={() => confirm('Are you sure?') && deleteCategory(category.id)}
-                                            title="Delete Category"
+                                            title={t('common.delete')}
                                         >
                                             <Trash2 size={18} />
                                         </button>
@@ -149,7 +151,7 @@ const CategoryPage = () => {
                                 <td colSpan={4} className="text-center py-16">
                                     <div className="flex flex-col items-center gap-2 text-base-content/30">
                                         <Search size={48} strokeWidth={1} />
-                                        <p className="text-xl font-medium">No categories found</p>
+                                        <p className="text-xl font-medium">{t('categories.noCategories')}</p>
                                     </div>
                                 </td>
                             </tr>

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import type { Category } from '../../types';
 import { X } from 'lucide-react';
 import { Input, Textarea } from '../common/FormField';
+import { useTranslation } from 'react-i18next';
 
 interface CategoryFormProps {
     initialData?: Category | null;
@@ -12,6 +13,7 @@ interface CategoryFormProps {
 }
 
 const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormProps) => {
+    const { t } = useTranslation();
     const { register, handleSubmit, reset, setValue } = useForm<Omit<Category, 'id'>>();
 
     useEffect(() => {
@@ -43,7 +45,7 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
                     {/* Header */}
                     <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
                         <h3 className="modal-title text-2xl font-bold text-base-content">
-                            {initialData ? 'Edit Category' : 'Add New Category'}
+                            {initialData ? t('categories.editCategory') : t('categories.addCategory')}
                         </h3>
                         <button
                             type="button"
@@ -58,13 +60,13 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
                     <form onSubmit={handleSubmit(handleFormSubmit)}>
                         <div className="modal-body p-6 space-y-6">
                             <Input
-                                label="Name"
-                                placeholder="Category name"
+                                label={t('categories.name')}
+                                placeholder={t('categories.name')}
                                 registration={register('name', { required: true })}
                             />
                             <Textarea
-                                label="Description"
-                                placeholder="Category description..."
+                                label={t('common.description')}
+                                placeholder={t('common.description')}
                                 rows={4}
                                 registration={register('description')}
                             />
@@ -77,13 +79,13 @@ const CategoryForm = ({ initialData, onSubmit, onClose, isOpen }: CategoryFormPr
                                 type="button"
                                 onClick={onClose}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 className="btn btn-primary px-8 shadow-lg shadow-primary/20"
                                 type="submit"
                             >
-                                {initialData ? 'Update Category' : 'Create Category'}
+                                {initialData ? t('common.update') : t('common.create')}
                             </button>
                         </div>
                     </form>

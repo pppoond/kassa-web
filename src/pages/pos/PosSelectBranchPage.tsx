@@ -3,8 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import { useAdminStore } from '../../store/useAdminStore';
 import ThemeToggle from '../../components/common/ThemeToggle';
+import LanguageSwitcher from '../../components/common/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const PosSelectBranchPage = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { branches, fetchBranches, setSelectedBranch } = useAdminStore();
 
@@ -19,7 +22,8 @@ const PosSelectBranchPage = () => {
 
     return (
         <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center p-4 transition-colors duration-300">
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+                <LanguageSwitcher />
                 <ThemeToggle />
             </div>
 
@@ -29,7 +33,7 @@ const PosSelectBranchPage = () => {
                         K
                     </div>
                     <h1 className="text-2xl font-black text-primary">KINDEE POS</h1>
-                    <p className="text-base-content/50 mt-1 text-sm">เลือกสาขาเพื่อเริ่มใช้งาน</p>
+                    <p className="text-base-content/50 mt-1 text-sm">{t('pos.selectBranchTitle')}</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-xl border border-base-300">
@@ -37,8 +41,7 @@ const PosSelectBranchPage = () => {
                         {branches.length === 0 ? (
                             <div className="text-center py-8 text-base-content/40">
                                 <MapPin size={40} className="mx-auto mb-3" />
-                                <p className="font-medium">ไม่พบสาขา</p>
-                                <p className="text-sm mt-1">กรุณาสร้างสาขาในหน้า Admin ก่อน</p>
+                                <p className="font-medium">{t('branches.noBranches')}</p>
                             </div>
                         ) : (
                             <div className="space-y-2">
@@ -63,7 +66,7 @@ const PosSelectBranchPage = () => {
                         )}
 
                         <Link to="/" className="btn btn-ghost btn-sm mt-4 w-full">
-                            ← กลับหน้าหลัก
+                            ← {t('common.backToHome')}
                         </Link>
                     </div>
                 </div>

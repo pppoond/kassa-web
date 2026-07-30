@@ -5,8 +5,10 @@ import { getOrders, completeOrder, cancelOrder } from '../../api/order';
 import { generateQrToken } from '../../api/customer';
 import { useAdminStore } from '../../store/useAdminStore';
 import { QRCodeSVG } from 'qrcode.react';
+import { useTranslation } from 'react-i18next';
 
 const PosOrdersPage = () => {
+    const { t } = useTranslation();
     const { selectedBranchId } = useAdminStore();
     const queryClient = useQueryClient();
     const [confirmOrder, setConfirmOrder] = useState<{ id: string; tableName: string; action: 'complete' | 'cancel' } | null>(null);
@@ -28,7 +30,7 @@ const PosOrdersPage = () => {
             queryClient.invalidateQueries({ queryKey: ['orders'] });
             setConfirmOrder(null);
         } catch {
-            alert('ไม่สามารถปิดออเดอร์ได้');
+            alert('Cannot complete order');
         } finally {
             setProcessing(false);
         }
@@ -42,7 +44,7 @@ const PosOrdersPage = () => {
             queryClient.invalidateQueries({ queryKey: ['orders'] });
             setConfirmOrder(null);
         } catch {
-            alert('ไม่สามารถยกเลิกออเดอร์ได้');
+            alert('Cannot cancel order');
         } finally {
             setProcessing(false);
         }
@@ -56,19 +58,19 @@ const PosOrdersPage = () => {
             const qrUrl = `${baseUrl}/customer/order/${result.token}`;
             setQrData({ token: qrUrl, tableName });
         } catch {
-            alert('ไม่สามารถสร้าง QR Code ได้');
+            alert('Cannot generate QR Code');
         }
     };
 
     const getStatusBadge = (status: string) => {
         switch (status.toLowerCase()) {
             case 'open':
-                return <span className="badge badge-warning badge-sm gap-1"><Clock size={12} />Open</span>;
+                return <span className="badge badge-warning badge-sm gap-1"><Clock size={12} />{t('pos.filterPending')}</span>;
             case 'completed':
             case 'paid':
-                return <span className="badge badge-success badge-sm gap-1"><CheckCircle size={12} />Completed</span>;
+                return <span className="badge badge-success badge-sm gap-1"><CheckCircle size={12} />{t('pos.filterPaid')}</span>;
             case 'cancelled':
-                return <span className="badge badge-error badge-sm gap-1"><XCircle size={12} />Cancelled</span>;
+                return <span className="badge badge-error badge-sm gap-1"><XCircle size={12} />{t('pos.filterCancelled')}</span>;
             default:
                 return <span className="badge badge-ghost badge-sm">{status}</span>;
         }
@@ -84,13 +86,12 @@ const PosOrdersPage = () => {
 
     return (
         <div className="h-full overflow-y-auto p-4 md:p-6 bg-base-200/50">
-            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Orders</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">{t('pos.ordersTitle')}</h2>
 
             {orders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-base-content/30">
                     <Receipt size={64} strokeWidth={1} />
-                    <p className="text-xl font-bold mt-4">ไม่มีออเดอร์</p>
-                    <p className="text-sm mt-1">ยังไม่มีออเดอร์ที่เปิดอยู่</p>
+                    <p className="text-xl font-bold mt-4">{t('pos.emptyOrders')}</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto bg-base-100 rounded-2xl shadow-sm border border-base-200">
@@ -98,10 +99,10 @@ const PosOrdersPage = () => {
                         <thead>
                             <tr className="bg-base-200/50">
                                 <th>Order</th>
-                                <th>Table</th>
-                                <th>Status</th>
-                                <th className="text-right">Amount</th>
-                                <th className="text-center">Actions</th>
+                                <th>{t('pos.table')}</th>
+                                <th>{t('common.status')}</th>
+                                <th className="text-right">{t('common.total')}</th>
+                                <th className="text-center">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,14 +140,14 @@ const PosOrdersPage = () => {
                                                         className="btn btn-success btn-xs text-white gap-1"
                                                     >
                                                         <CheckCircle size={14} />
-                                                        ปิดบิล
+                                                        {t('pos.markPaid')}
                                                     </button>
                                                     <button
                                                         onClick={() => setConfirmOrder({ id: order.id, tableName: order.tableName, action: 'cancel' })}
                                                         className="btn btn-error btn-xs text-white gap-1"
                                                     >
                                                         <XCircle size={14} />
-                                                        ยกเลิก
+                                                        {t('pos.cancelOrder')}
                                                     </button>
                                                 </>
                                             )}
@@ -169,13 +170,10 @@ const PosOrdersPage = () => {
                                 <AlertTriangle size={32} />
                             </div>
                             <h3 className="text-lg font-bold mb-2">
-                                {confirmOrder.action === 'cancel' ? 'ยืนยันยกเลิกออเดอร์' : 'ยืนยันปิดบิล'}
+                                {confirmOrder.action === 'cancel' ? t('pos.cancelOrder') : t('pos.markPaid')}
                             </h3>
                             <p className="text-base-content/60 text-sm">
-                                {confirmOrder.action === 'cancel'
-                                    ? <>คุณต้องการยกเลิกออเดอร์ของ <span className="font-bold text-base-content">{confirmOrder.tableName}</span> ใช่หรือไม่?</>
-                                    : <>คุณต้องการปิดออเดอร์ของ <span className="font-bold text-base-content">{confirmOrder.tableName}</span> ใช่หรือไม่?</>
-                                }
+                                <span className="font-bold text-base-content">{confirmOrder.tableName}</span>
                             </p>
                         </div>
                         <div className="flex gap-3 mt-6">
@@ -184,7 +182,7 @@ const PosOrdersPage = () => {
                                 onClick={() => setConfirmOrder(null)}
                                 disabled={processing}
                             >
-                                ปิด
+                                {t('common.cancel')}
                             </button>
                             <button
                                 className={`btn flex-1 text-white ${confirmOrder.action === 'cancel' ? 'btn-error' : 'btn-success'} ${processing ? 'loading' : ''}`}
@@ -192,7 +190,7 @@ const PosOrdersPage = () => {
                                 disabled={processing}
                             >
                                 {!processing && (confirmOrder.action === 'cancel' ? <XCircle size={16} /> : <CheckCircle size={16} />)}
-                                {processing ? 'กำลังดำเนินการ...' : 'ยืนยัน'}
+                                {processing ? t('common.loading') : t('common.confirm')}
                             </button>
                         </div>
                     </div>
@@ -205,12 +203,12 @@ const PosOrdersPage = () => {
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setQrData(null)}></div>
                     <div className="relative bg-base-100 rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4 text-center">
                         <h3 className="text-xl font-bold mb-2">{qrData.tableName}</h3>
-                        <p className="text-sm text-base-content/50 mb-6">Scan to order</p>
+                        <p className="text-sm text-base-content/50 mb-6">{t('tables.scanToOrder')}</p>
                         <div className="flex justify-center mb-6">
                             <QRCodeSVG value={qrData.token} size={240} />
                         </div>
                         <p className="text-xs text-base-content/40 mb-4 break-all">{qrData.token}</p>
-                        <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>Close</button>
+                        <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>{t('common.close')}</button>
                     </div>
                 </div>
             )}
