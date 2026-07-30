@@ -11,12 +11,9 @@ export interface CategorySalesSummaryDto {
 }
 
 export interface DayEndSummaryDto {
-    date: string; // ISO Date string
+    date: string;
     totalSales: number;
     totalOrders: number;
-    cashSales: number;
-    qrcodeSales: number;
-    creditCardSales: number;
     paymentMethods: PaymentMethodSummaryDto[];
     categorySales: CategorySalesSummaryDto[];
     openedAt: string;
