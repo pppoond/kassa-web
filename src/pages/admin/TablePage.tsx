@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Search, Edit, ToggleLeft, ToggleRight, X, TableProperties } from 'lucide-react';
+import { Plus, Search, Edit, ToggleLeft, ToggleRight, X, TableProperties, QrCode } from 'lucide-react';
 import { getTables, createTable, updateTable, toggleTableActive } from '../../api/table';
+import { generateQrToken } from '../../api/customer';
+import { QRCodeSVG } from 'qrcode.react';
 import { Input } from '../../components/common/FormField';
 import { useForm } from 'react-hook-form';
 import { useAdminStore } from '../../store/useAdminStore';
@@ -24,6 +26,7 @@ const TablePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTable, setEditingTable] = useState<Table | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [qrData, setQrData] = useState<{ token: string; tableName: string } | null>(null);
     const { register, handleSubmit, reset, setValue } = useForm<FormData>();
 
     const createMutation = useMutation({
@@ -52,6 +55,18 @@ const TablePage = () => {
     const handleToggle = async (id: string) => {
         await toggleTableActive(id);
         queryClient.invalidateQueries({ queryKey: ['tables'] });
+    };
+
+    const handleGenerateQr = async (table: Table) => {
+        if (!selectedBranchId) return;
+        try {
+            const result = await generateQrToken(selectedBranchId, table.id);
+            const baseUrl = window.location.origin;
+            const qrUrl = `${baseUrl}/customer/order/${result.token}`;
+            setQrData({ token: qrUrl, tableName: table.name });
+        } catch {
+            alert('Failed to generate QR code');
+        }
     };
 
     const onSubmit = (data: FormData) => {
@@ -138,6 +153,13 @@ const TablePage = () => {
                                     >
                                         <Edit size={16} />
                                     </button>
+                                    <button
+                                        className="btn btn-xs btn-ghost hover:text-secondary"
+                                        onClick={() => handleGenerateQr(table)}
+                                        title="Generate QR"
+                                    >
+                                        <QrCode size={16} />
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -175,6 +197,24 @@ const TablePage = () => {
                 </div>
                 <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1] ${isModalOpen ? 'opacity-100' : 'opacity-0'}`} onClick={() => setIsModalOpen(false)}></div>
             </div>
+
+            {/* QR Code Modal */}
+            {qrData && (
+                <div className="overlay modal fixed inset-0 z-[80] overlay-open opacity-100" role="dialog">
+                    <div className="modal-dialog w-full max-w-sm mx-auto my-10">
+                        <div className="modal-content border-0 rounded-3xl shadow-2xl bg-base-100 p-8 text-center">
+                            <h3 className="text-xl font-bold mb-2">{qrData.tableName}</h3>
+                            <p className="text-sm text-base-content/50 mb-6">Scan to order</p>
+                            <div className="flex justify-center mb-6">
+                                <QRCodeSVG value={qrData.token} size={240} />
+                            </div>
+                            <p className="text-xs text-base-content/40 mb-4 break-all">{qrData.token}</p>
+                            <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>Close</button>
+                        </div>
+                    </div>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]" onClick={() => setQrData(null)}></div>
+                </div>
+            )}
         </div>
     );
 };
