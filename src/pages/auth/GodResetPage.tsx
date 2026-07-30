@@ -54,27 +54,27 @@ const GodResetPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-6 transition-colors duration-400">
-            <div className="absolute top-8 left-8">
-                <button onClick={() => navigate('/login')} className="btn btn-circle btn-ghost hover:bg-base-300">
-                    <ArrowLeft size={24} />
+        <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-4 md:p-6 transition-colors duration-400">
+            <div className="absolute top-4 left-4 md:top-8 md:left-8">
+                <button onClick={() => navigate('/login')} className="btn btn-circle btn-sm md:btn-md btn-ghost hover:bg-base-300">
+                    <ArrowLeft size={20} />
                 </button>
             </div>
-            <div className="absolute top-8 right-8">
+            <div className="absolute top-4 right-4 md:top-8 md:right-8">
                 <ThemeToggle />
             </div>
 
             <div className="w-full max-w-[440px]">
-                <div className="text-center mb-10">
-                    <div className="inline-flex p-4 rounded-2xl bg-warning/10 text-warning mb-4">
-                        <Shield size={40} />
+                <div className="text-center mb-8 md:mb-10">
+                    <div className="inline-flex p-3 md:p-4 rounded-2xl bg-warning/10 text-warning mb-4">
+                        <Shield size={32} className="md:w-10 md:h-10" />
                     </div>
-                    <h1 className="text-3xl font-black tracking-tight">God Mode</h1>
+                    <h1 className="text-2xl md:text-3xl font-black tracking-tight">God Mode</h1>
                     <p className="text-base-content/50 mt-2 text-sm">Emergency password reset</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-2xl border border-base-300">
-                    <div className="card-body p-8">
+                    <div className="card-body p-6 md:p-8">
                         {error && (
                             <div className="alert alert-error mb-4 py-3 rounded-xl">
                                 <span className="text-sm font-medium">{error}</span>

@@ -46,13 +46,13 @@ const OptionGroupPage = () => {
     }, [optionGroups, searchQuery]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Option Groups</h1>
-                    <p className="text-base-content/60">Manage customization options for your menu items</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Option Groups</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">Manage customization options for your menu items</p>
                 </div>
-                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20" onClick={handleAddClick}>
+                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
                     Add Option Group
                 </button>
@@ -95,7 +95,7 @@ const OptionGroupPage = () => {
                             className="bg-base-100 rounded-2xl shadow-sm border border-base-200 overflow-hidden transition-all"
                         >
                             {/* Group Header */}
-                            <div className="flex items-center gap-4 p-5">
+                            <div className="flex items-center gap-2 md:gap-4 p-3 md:p-5">
                                 <button
                                     className="btn btn-sm btn-circle btn-ghost"
                                     onClick={() => handleToggleExpand(group.id)}
@@ -108,18 +108,18 @@ const OptionGroupPage = () => {
                                 </button>
 
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3">
-                                        <h3 className="font-bold text-lg truncate">{group.name}</h3>
-                                        <div className={`badge badge-sm ${group.isActive ? 'badge-success' : 'badge-error'}`}>
+                                    <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                                        <h3 className="font-bold text-base md:text-lg truncate">{group.name}</h3>
+                                        <div className={`badge badge-xs md:badge-sm ${group.isActive ? 'badge-success' : 'badge-error'}`}>
                                             {group.isActive ? 'Active' : 'Inactive'}
                                         </div>
                                         {group.isRequired && (
-                                            <div className="badge badge-sm badge-warning">Required</div>
+                                            <div className="badge badge-xs md:badge-sm badge-warning">Required</div>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-4 mt-1 text-sm text-base-content/50">
+                                    <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-1 text-xs md:text-sm text-base-content/50">
                                         {group.description && (
-                                            <span className="truncate">{group.description}</span>
+                                            <span className="truncate max-w-[150px] md:max-w-none">{group.description}</span>
                                         )}
                                         <span>Select {group.minSelections}–{group.maxSelections}</span>
                                         <span>{group.options.length} option{group.options.length !== 1 ? 's' : ''}</span>

@@ -55,13 +55,13 @@ const MenuItemPage = () => {
     }, [menuItems, searchQuery, selectedCategory]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Menu Items</h1>
-                    <p className="text-base-content/60">Manage your product list and pricing</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Menu Items</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">Manage your product list and pricing</p>
                 </div>
-                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20" onClick={handleAddClick}>
+                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
                     Add New Item
                 </button>
@@ -130,13 +130,13 @@ const MenuItemPage = () => {
 
             {/* Table Section */}
             <div className="overflow-x-auto bg-base-100 rounded-2xl shadow-sm border border-base-200">
-                <table className="table table-lg">
+                <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
                             <th className="rounded-tl-2xl">Product</th>
-                            <th>Category</th>
+                            <th className="hidden sm:table-cell">Category</th>
                             <th>Price</th>
-                            <th>Status</th>
+                            <th className="hidden md:table-cell">Status</th>
                             <th className="text-right rounded-tr-2xl">Actions</th>
                         </tr>
                     </thead>
@@ -144,31 +144,31 @@ const MenuItemPage = () => {
                         {filteredItems.map((item) => (
                             <tr key={item.id} className="hover:bg-base-200/30 transition-colors">
                                 <td>
-                                    <div className="flex items-center gap-4">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle w-14 h-14 bg-base-200 ring ring-base-100">
+                                    <div className="flex items-center gap-3 md:gap-4">
+                                        <div className="avatar hidden sm:block">
+                                            <div className="mask mask-squircle w-10 h-10 md:w-14 md:h-14 bg-base-200 ring ring-base-100">
                                                 {item.imageUrl ? (
                                                     <img src={item.imageUrl} alt={item.name} className="object-cover" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-base-content/20 bg-base-200">
-                                                        <Search size={24} />
+                                                        <Search size={20} />
                                                     </div>
                                                 )}
                                             </div>
                                         </div>
                                         <div>
-                                            <div className="font-bold text-lg">{item.name}</div>
-                                            <div className="text-xs text-base-content/50 uppercase tracking-wider font-semibold">ID: {item.id.slice(0, 8)}</div>
+                                            <div className="font-bold text-sm md:text-lg">{item.name}</div>
+                                            <div className="text-xs text-base-content/50 uppercase tracking-wider font-semibold hidden md:block">ID: {item.id.slice(0, 8)}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <span className="badge badge-outline badge-md py-3">{getCategoryName(item.categoryId)}</span>
+                                <td className="hidden sm:table-cell">
+                                    <span className="badge badge-outline badge-sm md:badge-md py-2 md:py-3">{getCategoryName(item.categoryId)}</span>
                                 </td>
-                                <td className="font-bold text-lg text-primary">
+                                <td className="font-bold text-sm md:text-lg text-primary">
                                     ฿{item.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </td>
-                                <td>
+                                <td className="hidden md:table-cell">
                                     <div className={`badge ${item.isAvailable ? 'badge-success' : 'badge-error'} badge-sm gap-1.5`}>
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.isAvailable ? 'bg-success-content' : 'bg-error-content'}`} />
                                         {item.isAvailable ? 'Available' : 'Out of Stock'}

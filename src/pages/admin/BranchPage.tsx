@@ -62,13 +62,13 @@ const BranchPage = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Branches</h1>
-                    <p className="text-base-content/60">Manage your store locations</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Branches</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">Manage your store locations</p>
                 </div>
-                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20" onClick={handleAdd}>
+                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAdd}>
                     <Plus size={20} />
                     Add Branch
                 </button>
@@ -127,7 +127,7 @@ const BranchPage = () => {
                 role="dialog"
                 tabIndex={-1}
             >
-                <div className={`modal-dialog transition-all duration-300 w-full max-w-lg mx-auto my-10 ${isModalOpen ? 'translate-y-0' : 'translate-y-10'}`}>
+                <div className={`modal-dialog transition-all duration-300 w-full max-w-lg mx-4 md:mx-auto my-4 md:my-10 ${isModalOpen ? 'translate-y-0' : 'translate-y-10'}`}>
                     <div className="modal-content border-0 rounded-3xl shadow-2xl bg-base-100">
                         <div className="modal-header flex items-center justify-between p-6 border-b border-base-200">
                             <h3 className="text-2xl font-bold">{editingBranch ? 'Edit Branch' : 'Add New Branch'}</h3>

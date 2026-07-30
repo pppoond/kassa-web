@@ -1,55 +1,71 @@
-import { Users } from 'lucide-react';
+import { Users, TableProperties } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-// --- Mock Data ---
-const MOCK_TABLES = [
-    { id: 1, name: 'T-01', status: 'free', pax: 4 },
-    { id: 2, name: 'T-02', status: 'occupied', pax: 2 },
-    { id: 3, name: 'T-03', status: 'unpaid', pax: 4 },
-    { id: 4, name: 'T-04', status: 'free', pax: 6 },
-    { id: 5, name: 'T-05', status: 'free', pax: 2 },
-    { id: 6, name: 'T-06', status: 'occupied', pax: 8 },
-    { id: 7, name: 'T-07', status: 'free', pax: 4 },
-    { id: 8, name: 'T-08', status: 'free', pax: 4 },
-];
-
-interface TableLayoutProps {
-    onTableClick: (tableId: number) => void;
+export interface PosTableItem {
+    id: string;
+    code: string;
+    name: string;
+    status: 'free' | 'occupied';
+    isActive: boolean;
 }
 
-const TableLayout = ({ onTableClick }: TableLayoutProps) => {
-    return (
-        <div className="p-6 h-full overflow-y-auto bg-base-200/50">
-            <h2 className="text-2xl font-bold mb-6">Table Management</h2>
+interface TableLayoutProps {
+    tables: PosTableItem[];
+    loading?: boolean;
+    onTableClick: (tableId: string) => void;
+}
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {MOCK_TABLES.map((table) => (
+const TableLayout = ({ tables, loading, onTableClick }: TableLayoutProps) => {
+    if (loading) {
+        return (
+            <div className="p-6 h-full flex items-center justify-center bg-base-200/50">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+        );
+    }
+
+    if (tables.length === 0) {
+        return (
+            <div className="p-6 h-full flex flex-col items-center justify-center bg-base-200/50 text-base-content/30">
+                <TableProperties size={64} strokeWidth={1} />
+                <p className="text-xl font-bold mt-4">No tables found</p>
+                <p className="text-sm mt-1">Add tables in admin settings</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="p-4 md:p-6 h-full overflow-y-auto bg-base-200/50">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Tables</h2>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+                {tables.map((table) => (
                     <button
                         key={table.id}
                         onClick={() => onTableClick(table.id)}
+                        disabled={!table.isActive}
                         className={cn(
-                            "relative aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all hover:scale-105 shadow-md",
-                            table.status === 'free' && "bg-base-100 border-2 border-success/20 hover:border-success",
+                            "relative aspect-square rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-2 transition-all hover:scale-105 shadow-md",
+                            table.status === 'free' && table.isActive && "bg-base-100 border-2 border-success/20 hover:border-success",
                             table.status === 'occupied' && "bg-error/10 border-2 border-error text-error",
-                            table.status === 'unpaid' && "bg-warning/10 border-2 border-warning text-warning-content"
+                            !table.isActive && "bg-base-200 border-2 border-base-300 opacity-50 cursor-not-allowed"
                         )}
                     >
-                        <span className="text-3xl font-black">{table.name}</span>
+                        <span className="text-xl md:text-3xl font-black">{table.code}</span>
 
-                        <div className="flex items-center gap-1 text-sm font-medium opacity-70">
-                            <Users className="w-4 h-4" />
-                            <span>{table.pax} Pax</span>
-                        </div>
+                        <span className="text-xs md:text-sm font-medium opacity-70 truncate max-w-full px-1">
+                            {table.name}
+                        </span>
 
                         <div className={cn(
-                            "absolute top-3 right-3 w-3 h-3 rounded-full",
-                            table.status === 'free' && "bg-success",
+                            "absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 md:w-3 md:h-3 rounded-full",
+                            table.status === 'free' && table.isActive && "bg-success",
                             table.status === 'occupied' && "bg-error animate-pulse",
-                            table.status === 'unpaid' && "bg-warning"
+                            !table.isActive && "bg-base-content/20"
                         )} />
 
-                        <div className="absolute bottom-3 text-xs font-bold uppercase tracking-wider opacity-60">
-                            {table.status}
+                        <div className="absolute bottom-2 md:bottom-3 text-[10px] md:text-xs font-bold uppercase tracking-wider opacity-60">
+                            {!table.isActive ? 'inactive' : table.status}
                         </div>
                     </button>
                 ))}

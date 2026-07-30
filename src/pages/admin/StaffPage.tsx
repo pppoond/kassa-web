@@ -89,14 +89,14 @@ const StaffPage = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Staff Management</h1>
-                    <p className="text-base-content/60">Add and manage your team members</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Staff Management</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">Add and manage your team members</p>
                 </div>
                 <button
-                    className="btn btn-primary gap-2 shadow-lg shadow-primary/20"
+                    className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto"
                     onClick={() => { resetForm(); setSuccess(''); setIsModalOpen(true); }}
                 >
                     <Plus size={20} />
@@ -112,14 +112,14 @@ const StaffPage = () => {
 
             {/* Staff List */}
             <div className="overflow-x-auto bg-base-100 rounded-2xl shadow-sm border border-base-200">
-                <table className="table table-lg">
+                <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
                             <th className="rounded-tl-2xl">Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
+                            <th className="hidden sm:table-cell">Username</th>
+                            <th className="hidden md:table-cell">Email</th>
                             <th>Status</th>
-                            <th>Joined</th>
+                            <th className="hidden lg:table-cell">Joined</th>
                             <th className="text-right rounded-tr-2xl">Actions</th>
                         </tr>
                     </thead>
@@ -157,14 +157,14 @@ const StaffPage = () => {
                                             <div className="font-bold">{staff.fullName}</div>
                                         </div>
                                     </td>
-                                    <td className="font-mono text-sm">{staff.username}</td>
-                                    <td className="text-base-content/60">{staff.email || '—'}</td>
+                                    <td className="hidden sm:table-cell font-mono text-sm">{staff.username}</td>
+                                    <td className="hidden md:table-cell text-base-content/60">{staff.email || '—'}</td>
                                     <td>
                                         <div className={`badge badge-sm ${staff.isActive ? 'badge-success' : 'badge-error'}`}>
                                             {staff.isActive ? 'Active' : 'Inactive'}
                                         </div>
                                     </td>
-                                    <td className="text-sm text-base-content/50">
+                                    <td className="hidden lg:table-cell text-sm text-base-content/50">
                                         {new Date(staff.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="text-right">

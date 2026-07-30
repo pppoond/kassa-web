@@ -30,26 +30,26 @@ const DayEndPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-base-200 p-4 transition-colors duration-300">
-            <header className="mb-6 flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate('/')} className="btn btn-circle btn-ghost">
-                        <ArrowLeft size={24} />
+        <div className="min-h-screen bg-base-200 p-3 md:p-4 transition-colors duration-300">
+            <header className="mb-4 md:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="flex items-center gap-3 md:gap-4">
+                    <button onClick={() => navigate('/')} className="btn btn-circle btn-sm md:btn-md btn-ghost">
+                        <ArrowLeft size={20} />
                     </button>
-                    <h1 className="text-3xl font-bold text-base-content">{t('report.title')}</h1>
+                    <h1 className="text-xl md:text-3xl font-bold text-base-content">{t('report.title')}</h1>
                 </div>
-                <div className="flex gap-4 items-center">
+                <div className="flex gap-3 md:gap-4 items-center ml-auto sm:ml-0">
                     <LanguageSwitcher />
                     <ThemeToggle />
                 </div>
             </header>
 
-            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {/* Summary Card */}
                 <div className="card bg-base-100 shadow-xl col-span-full">
-                    <div className="card-body">
-                        <h2 className="card-title text-2xl mb-4">{t('report.summary')}</h2>
-                        <div className="stats stats-vertical lg:stats-horizontal shadow w-full">
+                    <div className="card-body p-4 md:p-6">
+                        <h2 className="card-title text-xl md:text-2xl mb-3 md:mb-4">{t('report.summary')}</h2>
+                        <div className="stats stats-vertical sm:stats-horizontal shadow w-full">
                             <div className="stat">
                                 <div className="stat-title">{t('report.totalSales')}</div>
                                 <div className="stat-value text-primary">฿{summary.totalSales.toLocaleString()}</div>
@@ -130,14 +130,14 @@ const DayEndPage: React.FC = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="col-span-full flex justify-end gap-4 mt-4">
-                    <button className="btn btn-outline gap-2">
+                <div className="col-span-full flex flex-col sm:flex-row justify-end gap-3 md:gap-4 mt-4">
+                    <button className="btn btn-outline gap-2 w-full sm:w-auto">
                         <Printer size={20} />
                         {t('report.print')}
                     </button>
                     {!summary.closedAt && (
                         <button 
-                            className="btn btn-error gap-2 text-white"
+                            className="btn btn-error gap-2 text-white w-full sm:w-auto"
                             onClick={handleCloseDay}
                         >
                             <Lock size={20} />

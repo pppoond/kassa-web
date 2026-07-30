@@ -90,8 +90,16 @@ export const updateOrderItemStatus = async (itemId: string, status: string): Pro
     await apiClient.patch(`/orders/items/${itemId}/status`, { status });
 };
 
-export const getOrders = async (branchId?: string): Promise<any[]> => {
-    const response = await apiClient.get<ApiResponse<any[]>>('/orders', { params: { branchId } });
+export interface OrderListItem {
+    id: string;
+    tableId: string;
+    tableName: string;
+    totalAmount: number;
+    status: string;
+}
+
+export const getOrders = async (branchId?: string): Promise<OrderListItem[]> => {
+    const response = await apiClient.get<ApiResponse<OrderListItem[]>>('/orders', { params: { branchId } });
     return response.data.data;
 };
 

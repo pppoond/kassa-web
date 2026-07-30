@@ -20,11 +20,20 @@ export interface UpdateTableRequest {
     name: string;
 }
 
+export interface TablePagedResponse {
+    items: Table[];
+    pageNumber: number;
+    totalPages: number;
+    totalCount: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
 export const getTables = async (branchId?: string): Promise<Table[]> => {
-    const response = await apiClient.get<ApiResponse<Table[]>>('/tables', {
-        params: { branchId }
+    const response = await apiClient.get<ApiResponse<TablePagedResponse>>('/tables', {
+        params: { branchId, pageSize: 100 }
     });
-    return response.data.data;
+    return response.data.data?.items ?? [];
 };
 
 export const getTable = async (id: string): Promise<Table> => {

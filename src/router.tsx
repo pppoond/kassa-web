@@ -5,7 +5,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Lazy load components
 const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
-const CustomerLayout = React.lazy(() => import('./layouts/CustomerLayout')); // Add this
+const CustomerLayout = React.lazy(() => import('./layouts/CustomerLayout'));
+const PosLayout = React.lazy(() => import('./layouts/PosLayout'));
 const DashboardPage = React.lazy(() => import('./pages/admin/DashboardPage'));
 const CategoryPage = React.lazy(() => import('./pages/admin/CategoryPage'));
 const MenuItemPage = React.lazy(() => import('./pages/admin/MenuItemPage'));
@@ -13,9 +14,10 @@ const OptionGroupPage = React.lazy(() => import('./pages/admin/OptionGroupPage')
 const StaffPage = React.lazy(() => import('./pages/admin/StaffPage'));
 const TablePage = React.lazy(() => import('./pages/admin/TablePage'));
 const BranchPage = React.lazy(() => import('./pages/admin/BranchPage'));
-const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
+const PosHomePage = React.lazy(() => import('./pages/pos/PosHomePage'));
+const PosTablesPage = React.lazy(() => import('./pages/pos/PosTablesPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
-const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage')); // Restore this
+const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage'));
 const MobileOrderingPage = React.lazy(() => import('./pages/ordering/MobileOrderingPage'));
 const LoginPage = React.lazy(() => import('./pages/auth/LoginPage'));
 const GodResetPage = React.lazy(() => import('./pages/auth/GodResetPage'));
@@ -75,9 +77,35 @@ const router = createBrowserRouter([
                 path: '/pos',
                 element: (
                     <Suspense fallback={<Loading />}>
-                        <PosPage />
+                        <PosLayout />
                     </Suspense>
                 ),
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <PosHomePage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'home',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <PosHomePage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'tables',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <PosTablesPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
             {
                 path: '/kitchen',

@@ -59,13 +59,13 @@ const CategoryPage = () => {
     }, [categories, searchQuery]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold">Categories</h1>
-                    <p className="text-base-content/60">Organize your menu items into logical groups</p>
+                    <h1 className="text-2xl md:text-3xl font-bold">Categories</h1>
+                    <p className="text-base-content/60 text-sm md:text-base">Organize your menu items into logical groups</p>
                 </div>
-                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20" onClick={handleAddClick}>
+                <button className="btn btn-primary gap-2 shadow-lg shadow-primary/20 w-full md:w-auto" onClick={handleAddClick}>
                     <Plus size={20} />
                     Add New Category
                 </button>
@@ -89,11 +89,11 @@ const CategoryPage = () => {
 
             {/* Table Section */}
             <div className="overflow-x-auto bg-base-100 rounded-2xl shadow-sm border border-base-200">
-                <table className="table table-lg">
+                <table className="table table-sm md:table-lg">
                     <thead>
                         <tr className="bg-base-200/50">
                             <th className="rounded-tl-2xl">Category Name</th>
-                            <th>Description</th>
+                            <th className="hidden sm:table-cell">Description</th>
                             <th>Status</th>
                             <th className="text-right rounded-tr-2xl">Actions</th>
                         </tr>
@@ -103,13 +103,13 @@ const CategoryPage = () => {
                             <tr key={category.id} className="hover:bg-base-200/30 transition-colors">
                                 <td>
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                                        <div className="p-2 bg-primary/10 text-primary rounded-lg hidden sm:flex">
                                             <Tag size={18} />
                                         </div>
-                                        <div className="font-bold text-lg">{category.name}</div>
+                                        <div className="font-bold text-sm md:text-lg">{category.name}</div>
                                     </div>
                                 </td>
-                                <td className="text-base-content/70 italic">
+                                <td className="hidden sm:table-cell text-base-content/70 italic">
                                     {category.description || 'No description'}
                                 </td>
                                 <td>

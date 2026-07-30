@@ -14,23 +14,23 @@ const KitchenPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-base-200 transition-colors duration-400 font-sans">
-            <header className="navbar bg-base-100 shadow-sm sticky top-0 z-40 px-8 py-4 border-b border-base-300 flex justify-between">
-                <div className="flex items-center gap-6">
-                    <button onClick={() => navigate('/')} className="btn btn-circle btn-ghost hover:bg-base-300">
-                        <ArrowLeft size={24} />
+            <header className="navbar bg-base-100 shadow-sm sticky top-0 z-40 px-4 md:px-8 py-3 md:py-4 border-b border-base-300 flex justify-between">
+                <div className="flex items-center gap-3 md:gap-6">
+                    <button onClick={() => navigate('/')} className="btn btn-circle btn-sm md:btn-md btn-ghost hover:bg-base-300">
+                        <ArrowLeft size={20} />
                     </button>
                     <div className="flex flex-col">
-                        <h1 className="text-2xl font-black tracking-tight text-primary leading-none uppercase">KINDEE Kitchen</h1>
-                        <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-1">Live Order Management</p>
+                        <h1 className="text-lg md:text-2xl font-black tracking-tight text-primary leading-none uppercase">KINDEE Kitchen</h1>
+                        <p className="text-[9px] md:text-[10px] font-bold opacity-40 uppercase tracking-widest mt-0.5 md:mt-1">Live Order Management</p>
                     </div>
                 </div>
-                <div className="flex gap-6 items-center">
+                <div className="flex gap-3 md:gap-6 items-center">
                     <LanguageSwitcher />
                     <ThemeToggle />
                 </div>
             </header>
 
-            <main className="p-6">
+            <main className="p-3 md:p-6">
                 {loading ? (
                     <div className="flex items-center justify-center py-24">
                         <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -41,7 +41,7 @@ const KitchenPage: React.FC = () => {
                         <p className="text-2xl font-bold mt-4">{t('kitchen.noActiveOrders')}</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
                         {orders.map(order => (
                             <KitchenOrderCard key={order.id} order={order} onUpdateItemStatus={updateItemStatus} />
                         ))}

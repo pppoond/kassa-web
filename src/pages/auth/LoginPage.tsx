@@ -95,14 +95,14 @@ const LoginPage: React.FC = () => {
 
     if (isSetupNeeded) {
         return (
-            <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-6 transition-colors duration-400">
-                <div className="absolute top-8 right-8">
+            <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-4 md:p-6 transition-colors duration-400">
+                <div className="absolute top-4 right-4 md:top-8 md:right-8">
                     <ThemeToggle />
                 </div>
 
                 <div className="w-full max-w-[500px]">
-                    <div className="text-center mb-10">
-                        <h1 className="text-5xl font-black tracking-tight text-primary">KINDEE</h1>
+                    <div className="text-center mb-8 md:mb-10">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight text-primary">KINDEE</h1>
                         <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs font-bold">First Time Setup</p>
                     </div>
 
@@ -189,19 +189,19 @@ const LoginPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-6 transition-colors duration-400">
-             <div className="absolute top-8 right-8">
+        <div className="min-h-screen bg-base-200 flex flex-col justify-center items-center p-4 md:p-6 transition-colors duration-400">
+             <div className="absolute top-4 right-4 md:top-8 md:right-8">
                 <ThemeToggle />
             </div>
 
             <div className="w-full max-w-[440px]">
-                <div className="text-center mb-10">
-                    <h1 className="text-5xl font-black tracking-tight text-primary">KINDEE</h1>
+                <div className="text-center mb-8 md:mb-10">
+                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-primary">KINDEE</h1>
                     <p className="text-base-content/50 mt-2 font-medium uppercase tracking-[0.2em] text-xs">Management System</p>
                 </div>
 
                 <div className="card bg-base-100 shadow-2xl shadow-primary/5 border border-base-300">
-                    <div className="card-body p-10">
+                    <div className="card-body p-6 md:p-10">
                         <div className="mb-8">
                             <h2 className="text-2xl font-bold">Welcome Back</h2>
                             <p className="text-base-content/60 text-sm mt-1">Please enter your credentials to continue</p>

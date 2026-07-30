@@ -3,8 +3,8 @@
 const DashboardPage = () => {
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-            <div className="stats shadow">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6">Dashboard</h1>
+            <div className="stats stats-vertical sm:stats-horizontal shadow w-full">
                 <div className="stat">
                     <div className="stat-title">Total Orders</div>
                     <div className="stat-value">0</div>
