@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, Fragment } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Lock, User, Mail, UserPlus, Plus, Users, X, Upload, ImageIcon, Eye, Shield } from 'lucide-react';
+import { Lock, User, Mail, UserPlus, Plus, Users, X, Upload, ImageIcon, Eye, Shield, ChevronDown, Check } from 'lucide-react';
 import { InputWithIcon } from '../../components/common/FormField';
+import { Listbox, Transition } from '@headlessui/react';
 import { register as registerUser } from '../../api/auth';
 import { getStaffList, resetStaffPassword } from '../../api/staff';
 import { uploadFile } from '../../api/upload';
@@ -279,16 +280,37 @@ const StaffPage = () => {
                                     <label className="label py-1">
                                         <span className="label-text font-bold text-xs uppercase opacity-50">Role</span>
                                     </label>
-                                    <select
-                                        className="select select-bordered w-full"
-                                        value={selectedRoleId}
-                                        onChange={(e) => setSelectedRoleId(e.target.value)}
-                                    >
-                                        <option value="">-- Select Role --</option>
-                                        {roles.map(role => (
-                                            <option key={role.id} value={role.id}>{role.name}</option>
-                                        ))}
-                                    </select>
+                                    <Listbox value={selectedRoleId} onChange={setSelectedRoleId}>
+                                        <div className="relative">
+                                            <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-3 pl-4 pr-10 text-left transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                                <span className={`block truncate ${selectedRoleId ? 'font-medium' : 'opacity-50'}`}>
+                                                    {roles.find(r => r.id === selectedRoleId)?.name || '-- Select Role --'}
+                                                </span>
+                                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                    <ChevronDown size={16} className="opacity-40" />
+                                                </span>
+                                            </Listbox.Button>
+                                            <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                                                <Listbox.Options className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-xl bg-base-100 py-1 shadow-xl ring-1 ring-base-300 focus:outline-none">
+                                                    {roles.map(role => (
+                                                        <Listbox.Option
+                                                            key={role.id}
+                                                            value={role.id}
+                                                            className={({ active }) => `relative cursor-pointer select-none py-3 pl-10 pr-4 ${active ? 'bg-primary/10 text-primary' : 'text-base-content'}`}
+                                                        >
+                                                            {({ selected }) => (
+                                                                <>
+                                                                    <span className={`block truncate ${selected ? 'font-bold' : 'font-medium'}`}>{role.name}</span>
+                                                                    {role.description && <span className="block text-xs opacity-50">{role.description}</span>}
+                                                                    {selected && <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary"><Check size={16} /></span>}
+                                                                </>
+                                                            )}
+                                                        </Listbox.Option>
+                                                    ))}
+                                                </Listbox.Options>
+                                            </Transition>
+                                        </div>
+                                    </Listbox>
                                 </div>
                             </div>
 

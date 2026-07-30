@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Search, ShoppingCart, Trash2, Plus, Minus, CreditCard, UtensilsCrossed, Store, LayoutGrid, Receipt, Settings, LogOut, X } from 'lucide-react';
+import { Search, ShoppingCart, Trash2, Plus, Minus, CreditCard, UtensilsCrossed, Store, LayoutGrid, Receipt, Settings, LogOut, X, ChevronDown, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ThemeToggle from '../../components/common/ThemeToggle';
 import TableLayout from '../../components/pos/TableLayout';
 import { cn } from '../../utils/cn';
+import { Listbox, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 import { fetchMenu } from '../../api/menu';
 import { getOptionGroups } from '../../api/optionGroup';
 import { placeOrder } from '../../api/order';
@@ -313,16 +315,36 @@ const PosPage = () => {
 
                             {/* Table Selection */}
                             <div className="p-3 border-b border-base-300 bg-base-200/50">
-                                <select
-                                    className="select select-bordered select-sm w-full"
-                                    value={selectedTableId || ''}
-                                    onChange={(e) => setSelectedTableId(e.target.value || null)}
-                                >
-                                    <option value="">-- Select Table --</option>
-                                    {tables.filter(t => t.isActive).map(t => (
-                                        <option key={t.id} value={t.id}>{t.name} ({t.code})</option>
-                                    ))}
-                                </select>
+                                <Listbox value={selectedTableId || ''} onChange={(val) => setSelectedTableId(val || null)}>
+                                    <div className="relative">
+                                        <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-2.5 pl-4 pr-10 text-left text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                            <span className={`block truncate ${selectedTableId ? 'font-medium' : 'opacity-50'}`}>
+                                                {tables.find(t => t.id === selectedTableId)?.name || '-- Select Table --'}
+                                            </span>
+                                            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                                <ChevronDown size={14} className="opacity-40" />
+                                            </span>
+                                        </Listbox.Button>
+                                        <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                                            <Listbox.Options className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-xl bg-base-100 py-1 shadow-xl ring-1 ring-base-300 focus:outline-none">
+                                                {tables.filter(t => t.isActive).map(t => (
+                                                    <Listbox.Option
+                                                        key={t.id}
+                                                        value={t.id}
+                                                        className={({ active }) => `relative cursor-pointer select-none py-2.5 pl-10 pr-4 text-sm ${active ? 'bg-primary/10 text-primary' : 'text-base-content'}`}
+                                                    >
+                                                        {({ selected }) => (
+                                                            <>
+                                                                <span className={`block truncate ${selected ? 'font-bold' : ''}`}>{t.name} ({t.code})</span>
+                                                                {selected && <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary"><Check size={14} /></span>}
+                                                            </>
+                                                        )}
+                                                    </Listbox.Option>
+                                                ))}
+                                            </Listbox.Options>
+                                        </Transition>
+                                    </div>
+                                </Listbox>
                             </div>
 
                             {/* Cart Items */}

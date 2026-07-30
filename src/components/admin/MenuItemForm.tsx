@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import type { MenuItem } from '../../types';
 import { useAdminStore } from '../../store/useAdminStore';
 import { X, Upload, ImageIcon } from 'lucide-react';
-import { Input, Textarea, Select, Toggle } from '../common/FormField';
+import { Input, Textarea, SelectListbox, Toggle } from '../common/FormField';
 import { uploadFile } from '../../api/upload';
 
 interface MenuItemFormProps {
@@ -23,7 +23,7 @@ interface FormData {
 }
 
 const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormProps) => {
-    const { register, handleSubmit, reset, setValue } = useForm<FormData>();
+    const { register, handleSubmit, reset, setValue, control } = useForm<FormData>();
     const categories = useAdminStore((state) => state.categories);
 
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -125,11 +125,19 @@ const MenuItemForm = ({ initialData, onSubmit, onClose, isOpen }: MenuItemFormPr
                                     placeholder="Item name"
                                     registration={register('name', { required: true })}
                                 />
-                                <Select
-                                    label="Category"
-                                    placeholder="Select Category"
-                                    options={categoryOptions}
-                                    registration={register('categoryId', { required: true })}
+                                <Controller
+                                    name="categoryId"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <SelectListbox
+                                            label="Category"
+                                            placeholder="Select Category"
+                                            options={categoryOptions}
+                                            value={field.value || ''}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
                                 />
                                 <Input
                                     label="Price (฿)"

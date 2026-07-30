@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import { useAdminStore } from '../../store/useAdminStore';
-import { Trash2, Edit, Plus, Search, Filter, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Filter, ToggleLeft, ToggleRight, ChevronDown, Check } from 'lucide-react';
+import { Listbox, Transition } from '@headlessui/react';
 import MenuItemForm from '../../components/admin/MenuItemForm';
 import { toggleMenuItemActive } from '../../api/menuItem';
 import type { MenuItem } from '../../types';
@@ -82,22 +83,48 @@ const MenuItemPage = () => {
                 </div>
                 
                 <div className="form-control w-full md:w-64">
-                    <div className="relative">
-                        <select 
-                            className="select select-floating select-bordered w-full peer"
-                            id="filterCategory"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                        >
-                            <option value="all">All Categories</option>
-                            {categories.map(cat => (
-                                <option key={cat.id} value={cat.id}>{cat.name}</option>
-                            ))}
-                        </select>
-                        <label htmlFor="filterCategory" className="select-floating-label flex items-center gap-2">
-                            <Filter size={14} /> Category
-                        </label>
-                    </div>
+                    <Listbox value={selectedCategory} onChange={setSelectedCategory}>
+                        <div className="relative">
+                            <Listbox.Button className="relative w-full cursor-pointer rounded-lg border border-base-300 bg-base-100 py-3 pl-4 pr-10 text-left transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <span className="flex items-center gap-2 font-medium">
+                                    <Filter size={14} className="opacity-50" />
+                                    {selectedCategory === 'all' ? 'All Categories' : categories.find(c => c.id === selectedCategory)?.name || 'Select'}
+                                </span>
+                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <ChevronDown size={16} className="opacity-40" />
+                                </span>
+                            </Listbox.Button>
+                            <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                                <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-base-100 py-1 shadow-xl ring-1 ring-base-300 focus:outline-none">
+                                    <Listbox.Option
+                                        value="all"
+                                        className={({ active }) => `relative cursor-pointer select-none py-3 pl-10 pr-4 ${active ? 'bg-primary/10 text-primary' : 'text-base-content'}`}
+                                    >
+                                        {({ selected }) => (
+                                            <>
+                                                <span className={`block truncate ${selected ? 'font-bold' : ''}`}>All Categories</span>
+                                                {selected && <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary"><Check size={16} /></span>}
+                                            </>
+                                        )}
+                                    </Listbox.Option>
+                                    {categories.map(cat => (
+                                        <Listbox.Option
+                                            key={cat.id}
+                                            value={cat.id}
+                                            className={({ active }) => `relative cursor-pointer select-none py-3 pl-10 pr-4 ${active ? 'bg-primary/10 text-primary' : 'text-base-content'}`}
+                                        >
+                                            {({ selected }) => (
+                                                <>
+                                                    <span className={`block truncate ${selected ? 'font-bold' : ''}`}>{cat.name}</span>
+                                                    {selected && <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-primary"><Check size={16} /></span>}
+                                                </>
+                                            )}
+                                        </Listbox.Option>
+                                    ))}
+                                </Listbox.Options>
+                            </Transition>
+                        </div>
+                    </Listbox>
                 </div>
             </div>
 
