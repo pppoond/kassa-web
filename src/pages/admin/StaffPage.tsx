@@ -1,11 +1,15 @@
 import { useState, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Lock, User, Mail, UserPlus, Plus, Users, X, Upload, ImageIcon, Eye } from 'lucide-react';
+import { Lock, User, Mail, UserPlus, Plus, Users, X, Upload, ImageIcon, Eye, Shield } from 'lucide-react';
 import { InputWithIcon } from '../../components/common/FormField';
 import { register as registerUser } from '../../api/auth';
 import { getStaffList, resetStaffPassword } from '../../api/staff';
 import { uploadFile } from '../../api/upload';
+import { getRoles, getUserBranchPermissions, assignBranchPermission, revokeBranchPermission } from '../../api/roles';
+import { getBranches } from '../../api/branch';
 import type { StaffMember } from '../../api/staff';
+import type { RoleDto, UserBranchDto } from '../../api/roles';
+import type { Branch } from '../../types';
 
 const StaffPage = () => {
     const queryClient = useQueryClient();
@@ -13,15 +17,25 @@ const StaffPage = () => {
         queryKey: ['staff'],
         queryFn: getStaffList,
     });
+    const { data: roles = [] } = useQuery<RoleDto[]>({
+        queryKey: ['roles'],
+        queryFn: getRoles,
+    });
+    const { data: allBranches = [] } = useQuery<Branch[]>({
+        queryKey: ['branches'],
+        queryFn: () => getBranches(),
+    });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewingStaff, setViewingStaff] = useState<StaffMember | null>(null);
     const [resetPasswordFor, setResetPasswordFor] = useState<string | null>(null);
     const [newStaffPassword, setNewStaffPassword] = useState('');
+    const [userBranches, setUserBranches] = useState<UserBranchDto[]>([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [selectedRoleId, setSelectedRoleId] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -34,6 +48,7 @@ const StaffPage = () => {
         setPassword('');
         setFullName('');
         setEmail('');
+        setSelectedRoleId('');
         setSelectedFile(null);
         setAvatarPreview(null);
         setError('');
@@ -60,7 +75,7 @@ const StaffPage = () => {
                 avatarUrl = await uploadFile(selectedFile, 'users');
             }
 
-            await registerUser({ username, password, fullName, email, avatarUrl });
+            await registerUser({ username, password, fullName, email, avatarUrl, roleId: selectedRoleId || undefined });
             setSuccess(`Staff "${fullName}" created successfully!`);
             resetForm();
             setIsModalOpen(false);
@@ -154,7 +169,13 @@ const StaffPage = () => {
                                     <td className="text-right">
                                         <button
                                             className="btn btn-sm btn-circle btn-ghost hover:bg-primary/10 hover:text-primary"
-                                            onClick={() => setViewingStaff(staff)}
+                                            onClick={async () => {
+                                                setViewingStaff(staff);
+                                                try {
+                                                    const bp = await getUserBranchPermissions(staff.id);
+                                                    setUserBranches(bp);
+                                                } catch { setUserBranches([]); }
+                                            }}
                                             title="View Info"
                                         >
                                             <Eye size={18} />
@@ -252,6 +273,23 @@ const StaffPage = () => {
                                     icon={<Lock size={20} />}
                                     required
                                 />
+
+                                {/* Role Selection */}
+                                <div className="form-control">
+                                    <label className="label py-1">
+                                        <span className="label-text font-bold text-xs uppercase opacity-50">Role</span>
+                                    </label>
+                                    <select
+                                        className="select select-bordered w-full"
+                                        value={selectedRoleId}
+                                        onChange={(e) => setSelectedRoleId(e.target.value)}
+                                    >
+                                        <option value="">-- Select Role --</option>
+                                        {roles.map(role => (
+                                            <option key={role.id} value={role.id}>{role.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
 
                             <div className="modal-footer flex items-center justify-end p-6 border-t border-base-200 gap-3">
@@ -322,6 +360,40 @@ const StaffPage = () => {
                                     <div className="flex justify-between items-center py-2">
                                         <span className="text-sm text-base-content/50">ID</span>
                                         <span className="text-xs font-mono text-base-content/40">{viewingStaff.id}</span>
+                                    </div>
+                                </div>
+
+                                {/* Branch Permissions */}
+                                <div className="pt-2">
+                                    <h4 className="font-bold text-xs uppercase opacity-50 mb-2 flex items-center gap-1">
+                                        <Shield size={14} /> Branch Access
+                                    </h4>
+                                    <div className="space-y-2">
+                                        {allBranches.map(branch => {
+                                            const hasAccess = userBranches.some(ub => ub.branchId === branch.id && ub.canAccess);
+                                            return (
+                                                <label key={branch.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-base-200 cursor-pointer">
+                                                    <span className="text-sm font-medium">{branch.name}</span>
+                                                    <input
+                                                        type="checkbox"
+                                                        className="toggle toggle-sm toggle-primary"
+                                                        checked={hasAccess}
+                                                        onChange={async (e) => {
+                                                            if (e.target.checked) {
+                                                                await assignBranchPermission(viewingStaff.id, branch.id, true);
+                                                            } else {
+                                                                await revokeBranchPermission(viewingStaff.id, branch.id);
+                                                            }
+                                                            const bp = await getUserBranchPermissions(viewingStaff.id);
+                                                            setUserBranches(bp);
+                                                        }}
+                                                    />
+                                                </label>
+                                            );
+                                        })}
+                                        {allBranches.length === 0 && (
+                                            <p className="text-xs text-base-content/40">No branches available</p>
+                                        )}
                                     </div>
                                 </div>
 

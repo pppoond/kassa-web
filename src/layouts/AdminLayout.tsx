@@ -1,6 +1,6 @@
 import { useEffect, Fragment } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, List, Coffee, MapPin, Check, ChevronDown, Settings2, Home, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, List, Coffee, MapPin, Check, ChevronDown, Settings2, Home, LogOut, Users, TableProperties, Building } from 'lucide-react';
 import { Listbox, Transition } from '@headlessui/react';
 import { useAdminStore } from '../store/useAdminStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -149,6 +149,22 @@ const AdminLayout = () => {
                     >
                         <Users size={20} />
                         Staff
+                    </Link>
+                    <Link
+                        to="/admin/tables"
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 ${isActive('/admin/tables') ? 'bg-primary text-primary-content shadow-lg shadow-primary/20' : 'text-base-content/70 hover:bg-base-300 hover:text-base-content'
+                            }`}
+                    >
+                        <TableProperties size={20} />
+                        Tables
+                    </Link>
+                    <Link
+                        to="/admin/branches"
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium transition-all duration-200 ${isActive('/admin/branches') ? 'bg-primary text-primary-content shadow-lg shadow-primary/20' : 'text-base-content/70 hover:bg-base-300 hover:text-base-content'
+                            }`}
+                    >
+                        <Building size={20} />
+                        Branches
                     </Link>
                 </nav>
 

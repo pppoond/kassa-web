@@ -3,6 +3,7 @@ export interface User {
     username: string;
     fullName: string;
     role: string;
+    permissions?: string[];
 }
 
 export interface AuthResponse {
@@ -21,4 +22,5 @@ export interface RegisterRequest {
     fullName: string;
     email?: string;
     avatarUrl?: string;
+    roleId?: string;
 }

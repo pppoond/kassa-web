@@ -11,6 +11,8 @@ const CategoryPage = React.lazy(() => import('./pages/admin/CategoryPage'));
 const MenuItemPage = React.lazy(() => import('./pages/admin/MenuItemPage'));
 const OptionGroupPage = React.lazy(() => import('./pages/admin/OptionGroupPage'));
 const StaffPage = React.lazy(() => import('./pages/admin/StaffPage'));
+const TablePage = React.lazy(() => import('./pages/admin/TablePage'));
+const BranchPage = React.lazy(() => import('./pages/admin/BranchPage'));
 const PosPage = React.lazy(() => import('./pages/pos/PosPage'));
 const KitchenPage = React.lazy(() => import('./pages/kitchen/KitchenPage'));
 const DayEndPage = React.lazy(() => import('./pages/report/DayEndPage')); // Restore this
@@ -138,6 +140,22 @@ const router = createBrowserRouter([
                         element: (
                             <Suspense fallback={<Loading />}>
                                 <StaffPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'tables',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <TablePage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'branches',
+                        element: (
+                            <Suspense fallback={<Loading />}>
+                                <BranchPage />
                             </Suspense>
                         ),
                     },
