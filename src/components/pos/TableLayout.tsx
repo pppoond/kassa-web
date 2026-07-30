@@ -1,4 +1,4 @@
-import { Users, TableProperties } from 'lucide-react';
+import { TableProperties } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export interface PosTableItem {
@@ -12,7 +12,7 @@ export interface PosTableItem {
 interface TableLayoutProps {
     tables: PosTableItem[];
     loading?: boolean;
-    onTableClick: (tableId: string) => void;
+    onTableClick: (table: PosTableItem) => void;
 }
 
 const TableLayout = ({ tables, loading, onTableClick }: TableLayoutProps) => {
@@ -42,7 +42,7 @@ const TableLayout = ({ tables, loading, onTableClick }: TableLayoutProps) => {
                 {tables.map((table) => (
                     <button
                         key={table.id}
-                        onClick={() => onTableClick(table.id)}
+                        onClick={() => onTableClick(table)}
                         disabled={!table.isActive}
                         className={cn(
                             "relative aspect-square rounded-2xl p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-2 transition-all hover:scale-105 shadow-md",

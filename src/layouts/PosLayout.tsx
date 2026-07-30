@@ -51,12 +51,18 @@ const PosLayout = () => {
                     >
                         <LayoutGrid className="w-6 h-6" />
                     </Link>
-                    <button className="btn btn-square btn-ghost w-full h-14 rounded-xl">
+                    <Link
+                        to="/pos/orders"
+                        className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/orders') ? "btn-active btn-neutral" : "btn-ghost")}
+                    >
                         <Receipt className="w-6 h-6" />
-                    </button>
-                    <button className="btn btn-square btn-ghost w-full h-14 rounded-xl">
+                    </Link>
+                    <Link
+                        to="/pos/settings"
+                        className={cn("btn btn-square w-full h-14 rounded-xl transition-all", isActive('/pos/settings') ? "btn-active btn-neutral" : "btn-ghost")}
+                    >
                         <Settings className="w-6 h-6" />
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="mt-auto flex flex-col gap-4 w-full px-2 items-center">
@@ -117,9 +123,19 @@ const PosLayout = () => {
                     <LayoutGrid className="w-5 h-5" />
                     <span className="text-[10px]">Tables</span>
                 </Link>
-                <Link to="/" className="btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2 text-error">
-                    <LogOut className="w-5 h-5" />
-                    <span className="text-[10px]">Exit</span>
+                <Link
+                    to="/pos/orders"
+                    className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/orders') && "text-primary")}
+                >
+                    <Receipt className="w-5 h-5" />
+                    <span className="text-[10px]">Orders</span>
+                </Link>
+                <Link
+                    to="/pos/settings"
+                    className={cn("btn btn-ghost btn-sm flex-col gap-0.5 h-auto py-2", isActive('/pos/settings') && "text-primary")}
+                >
+                    <Settings className="w-5 h-5" />
+                    <span className="text-[10px]">Settings</span>
                 </Link>
             </div>
         </div>

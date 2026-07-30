@@ -111,3 +111,7 @@ export const getOrder = async (id: string): Promise<any> => {
 export const completeOrder = async (id: string): Promise<void> => {
     await apiClient.post(`/orders/${id}/complete`);
 };
+
+export const cancelOrder = async (id: string): Promise<void> => {
+    await apiClient.post(`/orders/${id}/cancel`);
+};
