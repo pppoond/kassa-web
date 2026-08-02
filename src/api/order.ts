@@ -96,6 +96,9 @@ export interface OrderListItem {
     tableName: string;
     totalAmount: number;
     status: string;
+    /** QR ที่ออกไว้แล้วกับ order นี้ (ถ้ามี) */
+    qrToken?: string | null;
+    qrExpiresAt?: string | null;
 }
 
 export const getOrders = async (branchId?: string): Promise<OrderListItem[]> => {

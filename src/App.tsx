@@ -1,16 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { Monitor, LayoutDashboard, Utensils, FileText, LogOut } from 'lucide-react';
 import ThemeToggle from './components/common/ThemeToggle';
-import { useAuthStore } from './store/useAuthStore';
 import { useAdminStore } from './store/useAdminStore';
+import { logoutSession } from './api/session';
 
 const App = () => {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
   const { clearSelectedBranch } = useAdminStore();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logoutSession();
     navigate('/login');
   };
 

@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, List, Coffee, MapPin, Check, ChevronDown, Settings2, Home, LogOut, Users, TableProperties, Building, Menu, X } from 'lucide-react';
 import { Listbox, Transition } from '@headlessui/react';
 import { useAdminStore } from '../store/useAdminStore';
-import { useAuthStore } from '../store/useAuthStore';
+import { logoutSession } from '../api/session';
 import ThemeToggle from '../components/common/ThemeToggle';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,6 @@ const AdminLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { branches, selectedBranchId, setSelectedBranch, fetchBranches } = useAdminStore();
-    const { logout } = useAuthStore();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
@@ -28,8 +27,8 @@ const AdminLayout = () => {
     const isActive = (path: string) => location.pathname === path;
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logoutSession();
         navigate('/login');
     };
 

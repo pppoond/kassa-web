@@ -5,7 +5,7 @@ import ThemeToggle from '../components/common/ThemeToggle';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
 import { cn } from '../utils/cn';
 import { useAdminStore } from '../store/useAdminStore';
-import { useAuthStore } from '../store/useAuthStore';
+import { logoutSession } from '../api/session';
 import { useTranslation } from 'react-i18next';
 
 const PosLayout = () => {
@@ -13,7 +13,6 @@ const PosLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { branches, selectedBranchId, fetchBranches } = useAdminStore();
-    const { logout } = useAuthStore();
 
     useEffect(() => {
         fetchBranches();
@@ -21,8 +20,8 @@ const PosLayout = () => {
 
     const selectedBranch = branches.find(b => b.id === selectedBranchId);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logoutSession();
         navigate('/login');
     };
 

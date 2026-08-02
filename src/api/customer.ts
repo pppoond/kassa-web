@@ -72,11 +72,20 @@ export const placeCustomerOrder = async (token: string, items: CustomerOrderItem
 };
 
 // QR Generation (staff-only)
-export const generateQrToken = async (branchId: string, tableId: string, expiryHours?: number): Promise<{ orderId: string; token: string; expiresAt: string }> => {
+export const generateQrToken = async (
+    branchId: string,
+    tableId: string,
+    expiryHours?: number,
+    force = false,
+): Promise<{ orderId: string; token: string; expiresAt: string }> => {
     const response = await apiClient.post<ApiResponse<{ orderId: string; token: string; expiresAt: string }>>('/orders/qr/generate', {
         branchId,
         tableId,
         expiryHours: expiryHours || 8,
+        force,
     });
     return response.data.data;
 };
+
+/** สร้าง URL สำหรับให้ลูกค้า scan */
+export const buildCustomerOrderUrl = (token: string) => `${window.location.origin}/customer/order/${token}`;

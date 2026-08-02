@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Receipt, CheckCircle, Clock, XCircle, AlertTriangle, QrCode } from 'lucide-react';
+import { Receipt, CheckCircle, Clock, XCircle, AlertTriangle, QrCode, RefreshCw } from 'lucide-react';
 import { getOrders, completeOrder, cancelOrder } from '../../api/order';
-import { generateQrToken } from '../../api/customer';
+import type { OrderListItem } from '../../api/order';
+import { generateQrToken, buildCustomerOrderUrl } from '../../api/customer';
 import { useAdminStore } from '../../store/useAdminStore';
 import { QRCodeSVG } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,8 @@ const PosOrdersPage = () => {
     const queryClient = useQueryClient();
     const [confirmOrder, setConfirmOrder] = useState<{ id: string; tableName: string; action: 'complete' | 'cancel' } | null>(null);
     const [processing, setProcessing] = useState(false);
-    const [qrData, setQrData] = useState<{ token: string; tableName: string } | null>(null);
+    const [qrData, setQrData] = useState<{ url: string; tableId: string; tableName: string; expiresAt?: string | null } | null>(null);
+    const [qrLoading, setQrLoading] = useState(false);
 
     const { data: orders = [], isLoading } = useQuery({
         queryKey: ['orders', 'open', selectedBranchId],
@@ -50,15 +52,40 @@ const PosOrdersPage = () => {
         }
     };
 
-    const handleGenerateQr = async (tableId: string, tableName: string) => {
+    const isQrValid = (order: OrderListItem) =>
+        !!order.qrToken && !!order.qrExpiresAt && new Date(order.qrExpiresAt).getTime() > Date.now();
+
+    // มี QR อยู่แล้ว → เปิดดูเลย ไม่ยิง generate
+    const handleViewQr = async (order: OrderListItem) => {
+        if (isQrValid(order)) {
+            setQrData({
+                url: buildCustomerOrderUrl(order.qrToken!),
+                tableId: order.tableId,
+                tableName: order.tableName,
+                expiresAt: order.qrExpiresAt,
+            });
+            return;
+        }
+        // ยังไม่มี หรือหมดอายุแล้ว → ค่อยออกใหม่
+        await requestQr(order.tableId, order.tableName, false);
+    };
+
+    const requestQr = async (tableId: string, tableName: string, force: boolean) => {
         if (!selectedBranchId) return;
+        setQrLoading(true);
         try {
-            const result = await generateQrToken(selectedBranchId, tableId);
-            const baseUrl = window.location.origin;
-            const qrUrl = `${baseUrl}/customer/order/${result.token}`;
-            setQrData({ token: qrUrl, tableName });
+            const result = await generateQrToken(selectedBranchId, tableId, undefined, force);
+            setQrData({
+                url: buildCustomerOrderUrl(result.token),
+                tableId,
+                tableName,
+                expiresAt: result.expiresAt,
+            });
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
         } catch {
             alert('Cannot generate QR Code');
+        } finally {
+            setQrLoading(false);
         }
     };
 
@@ -129,9 +156,9 @@ const PosOrdersPage = () => {
                                             {order.status.toLowerCase() === 'open' && (
                                                 <>
                                                     <button
-                                                        onClick={() => handleGenerateQr(order.tableId, order.tableName)}
+                                                        onClick={() => handleViewQr(order)}
                                                         className="btn btn-ghost btn-xs tooltip"
-                                                        data-tip="QR Code"
+                                                        data-tip={isQrValid(order) ? t('tables.viewQr') : t('tables.generateQr')}
                                                     >
                                                         <QrCode size={16} />
                                                     </button>
@@ -205,10 +232,25 @@ const PosOrdersPage = () => {
                         <h3 className="text-xl font-bold mb-2">{qrData.tableName}</h3>
                         <p className="text-sm text-base-content/50 mb-6">{t('tables.scanToOrder')}</p>
                         <div className="flex justify-center mb-6">
-                            <QRCodeSVG value={qrData.token} size={240} />
+                            <QRCodeSVG value={qrData.url} size={240} />
                         </div>
-                        <p className="text-xs text-base-content/40 mb-4 break-all">{qrData.token}</p>
-                        <button className="btn btn-ghost w-full" onClick={() => setQrData(null)}>{t('common.close')}</button>
+                        <p className="text-xs text-base-content/40 mb-2 break-all">{qrData.url}</p>
+                        {qrData.expiresAt && (
+                            <p className="text-xs text-base-content/40 mb-4">
+                                {t('tables.qrExpiresAt')}: {new Date(qrData.expiresAt).toLocaleString()}
+                            </p>
+                        )}
+                        <div className="flex gap-3">
+                            <button
+                                className="btn btn-ghost flex-1"
+                                onClick={() => requestQr(qrData.tableId, qrData.tableName, true)}
+                                disabled={qrLoading}
+                            >
+                                <RefreshCw size={16} className={qrLoading ? 'animate-spin' : ''} />
+                                {t('tables.regenerateQr')}
+                            </button>
+                            <button className="btn btn-primary flex-1" onClick={() => setQrData(null)}>{t('common.close')}</button>
+                        </div>
                     </div>
                 </div>
             )}

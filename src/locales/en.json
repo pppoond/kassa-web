@@ -62,7 +62,8 @@
     "signIn": "Sign In",
     "contactAdmin": "Contact your administrator to get an account",
     "loginFailed": "Login failed. Please check your credentials.",
-    "enterBoth": "Please enter both username and password."
+    "enterBoth": "Please enter both username and password.",
+    "sessionExpired": "Your session has expired. Please sign in again."
   },
   "setup": {
     "title": "System Setup Wizard",
@@ -254,6 +255,9 @@
     "code": "Code",
     "name": "Table Name",
     "generateQr": "Generate QR",
+    "viewQr": "View QR",
+    "regenerateQr": "New QR",
+    "qrExpiresAt": "Expires",
     "scanToOrder": "Scan to order",
     "noTables": "No tables found",
     "qrTitle": "Table QR Code"

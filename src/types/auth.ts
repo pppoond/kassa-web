@@ -9,6 +9,11 @@ export interface User {
 export interface AuthResponse {
     user: User;
     token: string;
+    refreshToken: string;
+    /** ISO string — เวลาหมดอายุของ access token */
+    expiresAt: string;
+    /** ISO string — เวลาหมดอายุของ refresh token */
+    refreshTokenExpiresAt: string;
 }
 
 export interface LoginRequest {

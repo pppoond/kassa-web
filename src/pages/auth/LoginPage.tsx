@@ -32,11 +32,18 @@ const LoginPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     
-    const { login } = useAuthStore();
+    const { login, sessionExpired, clearSessionExpired } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
 
     const from = location.state?.from?.pathname || '/';
+
+    // ถูกเด้งมาเพราะ session หมดอายุ (จาก ProtectedRoute หรือ 401 interceptor)
+    useEffect(() => {
+        if (!sessionExpired) return;
+        setError(t('auth.sessionExpired'));
+        clearSessionExpired();
+    }, [sessionExpired, clearSessionExpired, t]);
 
     useEffect(() => {
         const checkStatus = async () => {
@@ -63,7 +70,7 @@ const LoginPage: React.FC = () => {
 
         try {
             const response = await loginApi({ username, password });
-            login(response.user, response.token);
+            login(response.user, response.token, response.refreshToken);
             navigate(from, { replace: true });
         } catch (err: any) {
             console.error('Login failed', err);
